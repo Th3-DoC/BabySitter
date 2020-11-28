@@ -1,4 +1,4 @@
-package th3doc.babysitter.configs;
+package th3doc.babysitter.player.gui;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -7,7 +7,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import th3doc.babysitter.Main;
-import th3doc.babysitter.enums.InvType;
+import th3doc.babysitter.player.data.InvType;
 
 import java.util.ArrayList;
 import java.util.List;

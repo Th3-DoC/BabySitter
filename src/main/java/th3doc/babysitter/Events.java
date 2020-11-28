@@ -7,9 +7,9 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import th3doc.babysitter.enums.Chat;
-import th3doc.babysitter.enums.Config;
-import th3doc.babysitter.enums.Perm;
+import th3doc.babysitter.player.data.Chat;
+import th3doc.babysitter.config.Config;
+import th3doc.babysitter.player.data.Perm;
 
 public class Events implements Listener {
 
@@ -67,6 +67,27 @@ public class Events implements Listener {
     @EventHandler
     public void commandPreProcess(PlayerCommandPreprocessEvent e)
     {
+        e.getPlayer().sendMessage(Chat._creativeDisabled.txt);
+        //TELEPORT CANCEL
+        if ((e.getMessage().toLowerCase().contains("teleport") || e.getMessage().toLowerCase().contains("tp"))
+                && !e.getPlayer().hasPermission(Perm._tpBypass.txt))
+        {
+            e.getPlayer().sendMessage("Teleport command sent");
+            String[] message = e.getMessage().split(" ");
+            //CHECK PLAYER IS NOT OP
+            if (!message[0].contains(e.getPlayer().getName()))
+            {
+                for (Player player : main.getServer().getOnlinePlayers())
+                {
+                    if (message[0].contains(player.getName()))
+                    {
+                        e.getPlayer().sendMessage("You Don't Have Permission To Do That.");
+                        e.setCancelled(true);
+                        return;
+                    }
+                }
+            }
+        }
         //CREATIVE CANCEL
         if (e.getMessage().toLowerCase().contains("creative")
                 && !main.getConfig().getBoolean(Config._allowCreative.txt))
@@ -132,5 +153,4 @@ public class Events implements Listener {
     /**
      * END INVENTORY CLOSE
      */
-
 }

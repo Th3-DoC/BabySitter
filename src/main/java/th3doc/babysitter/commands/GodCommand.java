@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import th3doc.babysitter.Main;
-import th3doc.babysitter.enums.Chat;
-import th3doc.babysitter.enums.Perm;
+import th3doc.babysitter.player.data.Chat;
+import th3doc.babysitter.player.data.Perm;
 
 import java.util.Arrays;
 import java.util.List;

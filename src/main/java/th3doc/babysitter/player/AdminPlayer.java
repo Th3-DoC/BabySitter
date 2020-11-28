@@ -14,9 +14,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import th3doc.babysitter.configs.ConfigHandler;
+import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.Main;
-import th3doc.babysitter.enums.*;
+import th3doc.babysitter.config.*;
+import th3doc.babysitter.player.data.Chat;
+import th3doc.babysitter.player.data.InvType;
+import th3doc.babysitter.player.data.Perm;
+import th3doc.babysitter.player.data.State;
 
 import java.io.File;
 import java.io.IOException;

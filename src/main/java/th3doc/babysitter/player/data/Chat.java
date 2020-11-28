@@ -1,4 +1,4 @@
-package th3doc.babysitter.enums;
+package th3doc.babysitter.player.data;
 
 import org.bukkit.ChatColor;
 

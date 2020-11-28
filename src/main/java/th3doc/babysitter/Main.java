@@ -7,8 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th3doc.babysitter.commands.*;
-import th3doc.babysitter.enums.Chat;
-import th3doc.babysitter.enums.Config;
+import th3doc.babysitter.player.data.Chat;
+import th3doc.babysitter.config.Config;
 import th3doc.babysitter.player.PlayerHandler;
 
 import java.io.File;
