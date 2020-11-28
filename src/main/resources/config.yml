@@ -1,0 +1,86 @@
+#ALLOW SPECIAL PERMS TO SPECIFIED RANKS#
+#SET THESE BELOW IN THE PERMISSIONS SECTION
+specialPermissions: true
+specialRanks:
+  - owner
+
+#SPECIAL PERMISSIONS ALWAYS ACTIVE#
+specialPermsAlways: false
+
+#ADMIN RANK NAME(s)#
+#PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE
+adminRank:
+  - admin
+  - owner
+
+#ALLOW ADMIN CREATIVE#
+adminCreative: false
+
+#ALLOW ADMIN FLIGHT IN SURVIVAL#
+adminFlight: false
+
+#CAN AN ADMIN /GIVE TO ADMINS IN SURVIVAL?#
+#REQUIRES GIVE PERMISSION IS SET TO TRUE
+adminGive: false
+
+#DISABLE GIVE COMMAND#
+#ONLY IF NOT OP OR DON'T HAVE BYPASS PERMISSIONS
+#REQUIRES GIVE PERMISSION IS SET TO TRUE
+allowGive: true
+
+#FORCE ADMIN TO PLAYER & TELEPORT HOME WHEN /BABYSIT IS TOGGLED#
+forceSpectate: true
+
+#PERMISSIONS SECTION#
+#YOU MAY ADD ANY PERMISSION, FROM ANY PLUGIN HERE! JUST MAKE SURE TO ONLY USE SPACES, NOT TAB,
+#AND FOLLOW THE EXACT SAME LAYOUT.
+#<permission reference number>:
+#     <permission>: essentials.command.home
+#     <value>: true/false
+
+#SPECIAL PERMISSION LIST#
+#THESE WILL EVALUATE AFTER ADMIN PERMISSIONS
+#ALLOWING THEM TO OVERWRITE DATA FROM ADMIN PERMISSIONS
+specialPermissionList:
+  1:
+    permission: minecraft.command.setblock
+    value: true
+  2:
+    permission: minecraft.command.seed
+    value: true
+  3:
+    permission: minecraft.command.selector
+    value: true
+
+#ADMIN PERMISSION LIST#
+adminPermissionList:
+  1:
+    permission: minecraft.command.selector
+    value: false
+  2:
+    permission: vanish.command
+    value: true
+  3:
+    permission: inv.see.command
+    value: true
+  4:
+    permission: enderSee.command
+    value: true
+  5:
+    permission: god.command
+    value: true
+  6:
+    permission: fly.command
+    value: true
+  7:
+    permission: minecraft.command.teleport
+    value: true
+  8:
+    permission: minecraft.command.give
+    value: true
+  9:
+    permission: minecraft.command.gamemode
+    value: true
+  10:
+    permission: minecraft.command.effect
+    value: true

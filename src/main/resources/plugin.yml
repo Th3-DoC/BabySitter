@@ -1,0 +1,66 @@
+name: BabySitter
+version: ${project.version}
+main: th3doc.babysitter.Main
+api-version: 1.13
+authors: [Th3_DoC]
+description: Admin Plugin
+
+commands:
+  babysit:
+    description: Activate Admin State.
+    aliases: [bs]
+    permission: babysit.command
+  vanish:
+    description: Toggle Vanish State.
+    permission: vanish.command
+  god:
+    description: Toggle God Mode.
+    permission: god.command
+  fly:
+    description: Toggle Fly Mode.
+    permission: fly.command
+  see:
+    description: View/Edit Player Inventories.
+    permission: inv.see.command
+  give:
+    permission: minecraft.command.give
+
+permissions:
+  babysit.*:
+    description: Allow All Permissions.
+    default: op
+    children:
+      babysit.command:
+        description: Allows The Use Of Babysit Command.
+        default: op
+      vanish.command:
+        description: Allows The Use Of Vanish Command.
+        default: op
+      fly.command:
+        description: Allows The Use Of Hide Command.
+        default: op
+      god.command:
+        description: Allows The Use Of God Command.
+        default: op
+      inv.see.command:
+        description: Allows The Use Of InvSee Command.
+        default: op
+      inv.edit.command:
+        description: Allows The Editing of Player Inventories.
+        default: op
+      force.spectator:
+        description: Bypass forced Spectator Mode.
+        default: op
+      give.cancel:
+        description: Bypass Configs /Give cancel.
+  babysit.op.admin:
+    description: Complete Permission Bypass Without OP.
+    children:
+      babysit.command: true
+      vanish.command: true
+      fly.command: true
+      god.command: true
+      inv.see.command: true
+      inv.edit.command: true
+      force.spectator: true
+      give.cancel: true
