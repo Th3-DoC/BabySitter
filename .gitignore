@@ -1,8 +1,8 @@
 target/
 Test Server/
 .idea/
-BabySitter.iml/
-pom.xml/
+BabySitter.iml
+pom.xml
 .gitattributes
 pom.xml.tag
 pom.xml.releaseBackup
