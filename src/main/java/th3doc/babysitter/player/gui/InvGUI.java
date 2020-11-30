@@ -28,9 +28,7 @@ public class InvGUI {
         }
         if (edit)
         {
-            main.player().admin().setEditingInv(viewer, true);
-            main.player().admin().setGuiName(viewer, guiName);
-            main.player().admin().setViewee(viewer, viewee);
+            main.player().inventory().setEditingInv(viewer, guiName);
         }
         if (inv.equals(InvType.EnderChest.name())) {
             Inventory gui = Bukkit.createInventory(null, size, guiName);

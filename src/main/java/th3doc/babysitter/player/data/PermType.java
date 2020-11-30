@@ -4,5 +4,7 @@ public enum PermType {
 
     Admin,
     Special,
+    AdminOP,
+    AdminTrusted,
     Basic
 }

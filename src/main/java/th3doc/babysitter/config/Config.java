@@ -7,7 +7,9 @@ public enum Config {
      *
      */
     _config("config.yml"),
-    _invConfig("invConfig"),
+    _invConfig("invConfig.yml"),
+    _adminConfig("adminConfig.yml"),
+    _playerConfig("playerConfig.yml"),
     /**
      * FOLDERS
      */
@@ -25,20 +27,30 @@ public enum Config {
     _value("value"),
     _specialPermissions("specialPermissions"),
     _specialRanks("specialRanks"),
-    _adminRank("adminRank"),
+    _adminRanks("adminRanks"),
+    _safeBlockPlace("safeBlockPlace"),
+    _safeBlocks("safeBlocks"),
+    _safeItemDrop("safeItemDrops"),
     /**
      * ADMIN CONFIG
      */
+    _states("states"),
     _adminState("adminState"),
-    _forceSpectate("forceSpectate"),
+    _flyState("flyState"),
     _vanishState("vanishState"),
+    _forceSpectate("forceSpectate"),
     _adminFlight("adminFlight"),
+    /**
+     * INV CONFIG
+     */
     _survivalInv("survivalInv"),
     _babysitInv("babysitInv"),
     _inv("inv"),
     _armour("armour"),
     _eChest("eChest"),
-    _flyState("flyState"),
+    /**
+     * PLAYER CONFIG
+     */
     _survivalLocation("survivalLocation");
 
     public String txt;

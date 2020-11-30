@@ -5,7 +5,7 @@ public enum InvType {
     Survival,
     Babysit,
     Inventory,
-    Armour,
     EnderChest,
+    OpenInventory,
     EditMode
 }

@@ -25,12 +25,15 @@ public enum Chat {
      * PERMISSION
      */
     _noConsole(ChatColor.RED + "This Command Cannot Be Run From Console!"),
+    _cancelBlockPlace("That Is Not A Safe Block To Place There."),
     _invalidGive("Invalid Arguments <USE>/give <player> <item> <count>"),
     _invalidViewerCommand(ChatColor.RED + "Invalid Selection <USE>/see <player> <inventoryType> <edit>"),
     _creativeDisabled(ChatColor.RED + "Creative Game Mode Disabled."),
     _giveDisabled(ChatColor.RED + "Give Command is Disabled."),
     _adminInSurvival(ChatColor.RED + "You Can Not /Give Admin's In Survival."),
     _noSLoc(ChatColor.RED + "Error Loading Survival Location, Please Advise An Admin."),
+    _tpAdminOnly("You May Only Teleport Yourself."),
+    _cancelItemDrop("It Is Not Safe To Drop That Item."),
     _targetInvalid(ChatColor.RED + "Invalid Target. <USE>/bs <player>");
 
     public String txt;

@@ -36,29 +36,28 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
         Player p = (Player) sender;
 
         //CHECK PERMISSION
-        if (p.hasPermission(Perm._invSee.txt))
+        if (p.hasPermission(Perm._invSeeCommand.txt))
         {
             //CHECK PLAYER IS VALID
             //CHECK ARGUMENT LENGTH IS VALID /SEE <PLAYER> <INVENTORY TYPE> <EDIT>
             if (args.length < 2
                     || args.length > 3
                     || (!(main.getServer().getPlayer(args[0]) instanceof Player))
-//                        || args[0].contains(p.getName())
-            )
+                    || (args[0].contains(p.getName()) && !p.hasPermission(Perm._seeBypass.txt))
+                    || !inventoryTypes.contains(args[1]))
             {
                 p.sendMessage(Chat._invalidViewerCommand.txt);
                 return false;
             }
             //CHECK SECOND ARGUMENT IS VALID
-            String inv = "";
-            if (inventoryTypes.contains(args[1])) { inv = args[1]; }
-            else { p.sendMessage(Chat._invalidViewerCommand.txt); return false; }
+            String inv = args[1];
             //CHECK THIRD ARGUMENT EXISTS
             boolean edit = false;
             if (args.length == 3)
             {
                 //CHECK THIRD ARGUMENT IS VALID
-                if (args[2].equals(InvType.EditMode.name())) { edit = true; }
+                if (args[2].equals(InvType.EditMode.name())
+                        &&  p.hasPermission(Perm._invEdit.txt)) { edit = true; }
                 else { p.sendMessage(Chat._invalidViewerCommand.txt); return false; }
             }
             new InvGUI(main, p, inv, main.getServer().getPlayer(args[0]), edit);
@@ -74,7 +73,7 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
             return null;
         }
         Player p = (Player) sender;
-        if (p.hasPermission(Perm._invSee.txt)) {
+        if (p.hasPermission(Perm._invSeeCommand.txt)) {
             if (args.length == 1) {
                 List<String> players = new ArrayList<>();
                 for (Player player : main.getServer().getOnlinePlayers()) {
@@ -87,7 +86,7 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
                 StringUtil.copyPartialMatches(args[1], inventoryTypes, tabComplete);
                 Collections.sort(tabComplete);
             }
-            if (args.length == 3) {
+            if (args.length == 3 && p.hasPermission(Perm._invEdit.txt)) {
                 List<String> edit = new ArrayList<>();
                 edit.add(0, InvType.EditMode.name());
                 StringUtil.copyPartialMatches(args[2], edit, tabComplete);

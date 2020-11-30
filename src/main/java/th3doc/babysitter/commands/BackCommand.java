@@ -9,23 +9,28 @@ import th3doc.babysitter.Main;
 import th3doc.babysitter.player.data.Chat;
 import th3doc.babysitter.player.data.Perm;
 
-public class VanishCommand implements CommandExecutor {
+public class BackCommand implements CommandExecutor {
 
     //CONSTRUCTOR
     private Main main;
-    public VanishCommand(Main main) { this.main = main; }
+    public BackCommand(Main main) { this.main = main; }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-
-        //CHECK INSTANCE OF PLAYER
-        if (!(sender instanceof Player)) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        
+        //INSTANCE OF PLAYER
+        if (!(sender instanceof Player))
+        {
             Bukkit.getLogger().info(Chat._noConsole.txt);
             return false;
         }
+        
         Player p = (Player) sender;
-
-        if (p.hasPermission(Perm._vanishCommand.txt)) { main.player().admin().toggleVanish(p); }
+        if (p.hasPermission(Perm._tpBypass.txt)
+                && main.player().location().getSurvivalLastKnown(p) != null)
+        {
+            p.teleport(main.player().location().getSurvivalLastKnown(p));
+        }
         return false;
     }
 }

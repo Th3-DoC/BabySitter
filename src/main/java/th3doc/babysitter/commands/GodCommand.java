@@ -5,19 +5,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import th3doc.babysitter.Main;
 import th3doc.babysitter.player.data.Chat;
 import th3doc.babysitter.player.data.Perm;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class GodCommand implements CommandExecutor {
-
-    //CONSTRUCTOR
-    private Main main;
-    public GodCommand(Main main) { this.main = main; }
-    private List<String> inventoryTypes = Arrays.asList("inv", "echest");
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

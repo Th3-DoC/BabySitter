@@ -2,21 +2,23 @@ package th3doc.babysitter.player.data;
 
 public enum Perm {
 
-    _opAdmin("babysitter.admin.*"),
     _babysitCommand("babysitter.command.bs"),
     _vanishCommand("babysitter.command.vanish"),
     _godCommand("babysitter.command.god"),
     _flyCommand("babysitter.command.fly"),
-    _invSee("babysitter.command.see"),
+    _giveCommand("babysitter.command.give"),
+    _invSeeCommand("babysitter.command.see"),
     _invEdit("babysitter.command.edit"),
-    _give("babysitter.command.give"),
     _forceSpectator("babysitter.bypass.spec"),
+    _blockPlaceBypass("babysitter.bypass.blocks"),
     _giveBypass("babysitter.bypass.give"),
     _tpBypass("babysitter.bypass.tp"),
-    /**
-     * Minecraft Permissions
-     */
-    _giveCommand("minecraft.command.give");
+    _creativeBypass("babysitter.bypass.creative"),
+    _permBypass("babysitter.bypass.perms"),
+    _invBypass("babysitter.bypass.inv"),
+    _seeBypass("babysitter.bypass.see"),
+    _itemDropBypass("babysitter.bypass.item"),
+    _vanishBypass("babysitter.bypass.vanish");
 
     public String txt;
 

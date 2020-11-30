@@ -4,12 +4,14 @@ import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th3doc.babysitter.commands.*;
-import th3doc.babysitter.player.data.Chat;
 import th3doc.babysitter.config.Config;
+import th3doc.babysitter.events.*;
 import th3doc.babysitter.player.PlayerHandler;
+import th3doc.babysitter.player.data.Chat;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +24,7 @@ public final class Main extends JavaPlugin {
         registerLuckPerms();
         defaultConfigStatus();
         registerCommands();
-        this.getServer().getPluginManager().registerEvents(new Events(this), this);
+        registerEvents();
         player = new PlayerHandler(this);
         reloadCommand();
         this.getLogger().info(Chat._onEnable.txt);
@@ -49,10 +51,23 @@ public final class Main extends JavaPlugin {
     {
         this.getCommand("babysit").setExecutor(new BabysitCommand(this));
         this.getCommand("vanish").setExecutor(new VanishCommand(this));
-        this.getCommand("god").setExecutor(new GodCommand(this));
+        this.getCommand("god").setExecutor(new GodCommand());
         this.getCommand("fly").setExecutor(new FlyCommand(this));
         this.getCommand("see").setExecutor(new SeeInventoryCommand(this));
         this.getCommand("give").setExecutor(new GiveCommand(this));
+        this.getCommand("back").setExecutor(new BackCommand(this));
+    }
+
+    //REGISTER EVENTS
+    private void registerEvents()
+    {
+        PluginManager manger = this.getServer().getPluginManager();
+
+        manger.registerEvents(new InventoryClose(this), this);
+        manger.registerEvents(new PlayerCommandPreProcess(this), this);
+        manger.registerEvents(new PlayerJoin(this), this);
+        manger.registerEvents(new PlayerQuit(this), this);
+        manger.registerEvents(new BlockPlace(this), this);
     }
 
     //RELOAD COMMAND
@@ -60,7 +75,7 @@ public final class Main extends JavaPlugin {
     {
         for (Player p : this.getServer().getOnlinePlayers())
         {
-            this.player().admin().initializeAdmin(p);
+            this.player.initialize(p);
         }
     }
 
