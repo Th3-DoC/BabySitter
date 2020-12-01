@@ -68,6 +68,8 @@ public final class Main extends JavaPlugin {
         manger.registerEvents(new PlayerJoin(this), this);
         manger.registerEvents(new PlayerQuit(this), this);
         manger.registerEvents(new BlockPlace(this), this);
+        manger.registerEvents(new PlayerDropItem(this), this);
+        manger.registerEvents(new InventoryOpen(this), this);
     }
 
     //RELOAD COMMAND

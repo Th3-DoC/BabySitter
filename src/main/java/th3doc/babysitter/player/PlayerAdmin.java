@@ -32,7 +32,7 @@ public class PlayerAdmin {
 
     //ADMIN LIST
     private List<String> adminList = new ArrayList<>();
-    protected List<String> list() { return adminList; }
+    public List<String> list() { return adminList; }
 
     //INITIALIZE PLAYER
     public void initialize(Player p)
@@ -225,17 +225,16 @@ public class PlayerAdmin {
                     player.hidePlayer(main, p);
                 }
             }
-            String message = ChatColor.YELLOW + p.getName() + Chat._fakeLogOut.txt;
-            if (states.get(p.getName()).getBoolean(Config._vanishState.txt)) { message = Chat._vanishOn.txt; }
             vanishedAdmins.add(p.getName());
-            setState(p, true, States.Vanish);
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     removePlayerTabInfo(p, false);
                 }
             }.runTaskLater(main, 1L);
-            main.getServer().broadcastMessage(message);
+            if (states.get(p.getName()).getBoolean(Config._vanishState.txt)) { p.sendMessage(Chat._vanishOn.txt); return; }
+            setState(p, true, States.Vanish);
+            main.getServer().broadcastMessage(ChatColor.YELLOW + p.getName() + Chat._fakeLogOut.txt);
         } else
         {
             //ITERATE AND UN-HIDE ADMIN FROM PLAYERS

@@ -51,6 +51,10 @@ public enum Config {
     /**
      * PLAYER CONFIG
      */
+    _playerList("playerList"),
+    _playerName("name"),
+    _playerUUID("UUID"),
+    _joinDate("joinDate"),
     _survivalLocation("survivalLocation");
 
     public String txt;

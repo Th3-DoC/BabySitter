@@ -34,9 +34,11 @@ public class PlayerLocation {
          * LOAD/CREATE CONFIG
          *
          */
-        //LOAD INVENTORY CONFIG
-        ConfigHandler config =
-                new ConfigHandler(main, Config._playerData.txt, p.getUniqueId().toString(), Config._playerConfig.txt);
+        //LOAD PLAYER CONFIG
+        ConfigHandler config = new ConfigHandler(main
+                , Config._playerData.txt
+                , p.getUniqueId().toString()
+                , Config._playerConfig.txt);
 
         //CHECK CONFIG VALUES, CREATE IF EMPTY
         //SURVIVAL LOCATION

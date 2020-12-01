@@ -15,16 +15,16 @@ public class InventoryClose implements Listener {
     @EventHandler
     public void inventoryCloseEvent(InventoryCloseEvent e)
     {
+        Player p = (Player) e.getPlayer();
         //WE PROBABLY WANT THIS TO TIE IN WITH OUR OFFLINE INVENTORY EDITOR
         //CHECK ADMIN HAS INVENTORY OPEN AND HAS NOT CHANGED
-        if(main.player().inventory().isCheckingInv((Player) e.getPlayer())) {
-            if(e.getInventory().getContents() != main.player().inventory().invToCheck((Player) e.getPlayer()))
+        if(main.player().inventory().isCheckingInv(p)) {
+            if(e.getInventory().getContents() != main.player().inventory().invToCheck(p))
             {
-                e.getInventory().setContents(main.player().inventory().invToCheck((Player) e.getPlayer()));
+                e.getInventory().setContents(main.player().inventory().invToCheck(p));
+                main.player().inventory().stopCheckingInv(p);
             }
         }
-        
-        //save player inv to config if its there inventory or echest closing
         
         //SAVE INVENTORY IF EDITING
         main.player().inventory().saveInvEdit((Player) e.getPlayer(), e);

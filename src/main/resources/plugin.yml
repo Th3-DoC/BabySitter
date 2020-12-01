@@ -80,6 +80,7 @@ permissions:
             default: op
           babysitter.bypass.flight:
             description: Allows Flight in Survival.
+            default: op
           babysitter.bypass.special:
             description: Special Permissions Will Always Be Active.
             default: op

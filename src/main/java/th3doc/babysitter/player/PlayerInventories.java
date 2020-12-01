@@ -10,10 +10,7 @@ import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.player.data.InvType;
 import th3doc.babysitter.player.data.Perm;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerInventories {
     
@@ -119,6 +116,7 @@ public class PlayerInventories {
     private HashMap<String, ItemStack[]> invToCheck = new HashMap<>();
     public ItemStack[] invToCheck(Player p) { return invToCheck.get(p.getName()); }
     public boolean isCheckingInv(Player p) { return invToCheck.containsKey(p.getName()); }
+    public void stopCheckingInv(Player p) { invToCheck.remove(p.getName()); }
     
     //SAVE EDITED INVENTORY
     public void saveInvEdit(Player p, InventoryCloseEvent e)
@@ -220,6 +218,15 @@ public class PlayerInventories {
     //MEMORY DUMP
     public void memoryDump(Player p)
     {
+        if(!main.player().isAdmin(p.getName())
+                && !p.hasPermission(Perm._invBypass.txt))
+        {
+            saveInventory(p
+                    , p.getInventory().getContents()
+                    , p.getInventory().getArmorContents()
+                    , p.getEnderChest().getContents()
+                    , InvType.Survival);
+        }
         //SURVIVAL INV
         survivalInv.remove(p.getUniqueId());
         survivalArmour.remove(p.getUniqueId());

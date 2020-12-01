@@ -73,6 +73,12 @@ safeItemDrops: true
 #SAFE BLOCKS#
 #############
 safeBlocks:
+  - CRAFTING_TABLE
+  - FURNACE
+  - DIRT
+  - SAND
+  - COBBLESTONE
+  - STONE
   - OAK_SIGN
   - ACACIA_SIGN
   - SPRUCE_SIGN
