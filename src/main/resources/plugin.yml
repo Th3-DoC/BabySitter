@@ -9,58 +9,118 @@ commands:
   babysit:
     description: Activate Admin State.
     aliases: [bs]
-    permission: babysit.command
+    permission: babysitter.command.bs
   vanish:
     description: Toggle Vanish State.
-    permission: vanish.command
+    permission: babysitter.command.vanish
   god:
     description: Toggle God Mode.
-    permission: god.command
+    permission: babysitter.command.god
   fly:
     description: Toggle Fly Mode.
-    permission: fly.command
+    permission: babysitter.command.fly
   see:
     description: View/Edit Player Inventories.
-    permission: inv.see.command
+    permission: babysitter.command.see
+  back:
+    description: Travel Back To Your Survival Location.
+    permission: babysitter.bypass.tp
   give:
-    permission: minecraft.command.give
+    description: Give Players Minecraft Items
+    permission: babysitter.command.give
 
 permissions:
   babysit.*:
     description: Allow All Permissions.
     default: op
     children:
-      babysit.command:
-        description: Allows The Use Of Babysit Command.
+      babysitter.command.*:
+        description: Allow All Commands.
         default: op
-      vanish.command:
-        description: Allows The Use Of Vanish Command.
+        children:
+          babysitter.command.bs:
+            description: Allows The Use Of BabySit Command.
+            default: op
+          babysitter.command.vanish:
+            description: Allows The Use Of Vanish Command.
+            default: op
+          babysitter.command.fly:
+            description: Allows The Use Of Hide Command.
+            default: op
+          babysitter.command.god:
+            description: Allows The Use Of God Command.
+            default: op
+          babysitter.command.see:
+            description: Allows The Use Of InvSee Command.
+            default: op
+          babysitter.command.edit:
+            description: Allows The Editing of Players.
+            default: op
+          babysitter.command.give:
+            description: Allows Give Function Without Selector Capabilities.
+            default: false
+      babysitter.bypass.*:
+        description: Bypass Admin Restrictions.
         default: op
-      fly.command:
-        description: Allows The Use Of Hide Command.
-        default: op
-      god.command:
-        description: Allows The Use Of God Command.
-        default: op
-      inv.see.command:
-        description: Allows The Use Of InvSee Command.
-        default: op
-      inv.edit.command:
-        description: Allows The Editing of Player Inventories.
-        default: op
-      force.spectator:
-        description: Bypass forced Spectator Mode.
-        default: op
-      give.cancel:
-        description: Bypass Configs /Give cancel.
-  babysit.op.admin:
-    description: Complete Permission Bypass Without OP.
+        children:
+          babysitter.bypass.spec:
+            description: Bypass forced Spectator Mode.
+            default: op
+          babysitter.bypass.give:
+            description: Bypass Configs /Give cancel.
+            default: op
+          babysitter.bypass.tp:
+            description: Bypass TP Controls & Restrictions.
+            default: op
+          babysitter.bypass.creative:
+            description: Bypass Disabled Creative.
+            default: op
+          babysitter.bypass.perms:
+            description: Bypass Config Set Permission Changes. Note That Permissions Set To False In The Config Will Not Change A True Value!
+            default: op
+          babysitter.bypass.flight:
+            description: Allows Flight in Survival.
+            default: op
+          babysitter.bypass.special:
+            description: Special Permissions Will Always Be Active.
+            default: op
+          babysitter.bypass.specialperms:
+            description: Bypass Config Set Permission Changes. Note That Permissions Set To False In The Config Will Not Change A True Value!
+            default: op
+          babysitter.bypass.inv:
+            description: Bypass Inventory Changes.
+            default: op
+          babysitter.bypass.see:
+            description: Bypass See Target Block.
+            default: op
+          babysitter.bypass.vanish:
+            description: Bypass Forced Vanish Toggle.
+            default: op
+          babysitter.bypass.blocks:
+            description: Bypass Blocked Block Placement.
+            default: op
+          babysitter.bypass.item:
+            description: Bypass Blocked Item Drops.
+            default: op
+  babysitter.admin.*:
+    description:
+    default: false
     children:
-      babysit.command: true
-      vanish.command: true
-      fly.command: true
-      god.command: true
-      inv.see.command: true
-      inv.edit.command: true
-      force.spectator: true
-      give.cancel: true
+      babysitter.admin.op:
+        desciption: Allows All Babysitter Permissions Without The Player Being OP.
+        children:
+          babysitter.command.*: true
+          babysitter.bypass.*: true
+      babysitter.admin.trusted:
+        description: Allows Most BabySitter Properties, Refer To The Wiki.
+        children:
+          babysitter.command.bs: true
+          babysitter.command.vanish: true
+          babysitter.command.fly: true
+          babysitter.command.god: true
+          babysitter.command.see: true
+          babysitter.command.edit: true
+          babysitter.command.give: true
+          babysitter.bypass.spec: true
+          babysitter.bypass.give: true
+          babysitter.bypass.tp: false

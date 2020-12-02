@@ -1,46 +1,145 @@
-#ALLOW SPECIAL PERMS TO SPECIFIED RANKS#
-#SET THESE BELOW IN THE PERMISSIONS SECTION
+##############################################
+#ALLOW SPECIAL PERMISSIONS TO SPECIFIED RANKS############
+#SET THESE PERMISSIONS BELOW, IN THE PERMISSIONS SECTION#
+#########################################################
 specialPermissions: true
+
+########################################################
+#SET SPECIAL PERMISSIONS FOR ACCESS OUT SIDE ADMIN MODE#
+#THIS CAN BE BYPASSED //babysitter.bypass.special\\#####
+########################################################
+specialPermsAlways: false
+
+######################
+#ALLOW ADMIN CREATIVE################################
+#THIS CAN BE BYPASSED //babysitter.bypass.creative\\#
+#####################################################
+adminCreative: false
+
+################################
+#ALLOW ADMIN FLIGHT IN SURVIVAL######################
+#THIS CAN BE BYPASSED //babysitter.bypass.flight\\#
+#####################################################
+adminFlight: false
+
+###########################################
+#CAN AN ADMIN /GIVE TO ADMINS IN SURVIVAL?#
+#REQUIRES GIVE PERMISSION IS SET TO TRUE#########
+#THIS CAN BE BYPASSED //babysitter.bypass.give\\#
+#################################################
+adminGive: false
+
+######################
+#DISABLE GIVE COMMAND####################
+#REQUIRES GIVE PERMISSION IS SET TO TRUE#########
+#THIS CAN BE BYPASSED //babysitter.bypass.give\\#
+#################################################
+allowGive: true
+
+####################################
+#FORCE ADMIN TO PLAYER IN SPECTATOR##############
+#THIS CAN BE BYPASSED //babysitter.bypass.spec\\#
+#################################################
+forceSpectate: true
+
+#######################################################
+#SPECIAL RANK NAME(s)##################################
+#PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE#
+#######################################################
 specialRanks:
   - owner
 
-#SPECIAL PERMISSIONS ALWAYS ACTIVE#
-specialPermsAlways: false
-
-#ADMIN RANK NAME(s)#
-#PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE
-adminRank:
+####################
+#ADMIN RANK NAME(s)####################################
+#PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE#
+#######################################################
+adminRanks:
   - admin
   - owner
 
-#ALLOW ADMIN CREATIVE#
-adminCreative: false
+##########################################################
+#SET THIS TO CONTROL BLOCKS PLACED BY ADMINS, YOU CAN SET#
+#THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
+##########################################################
+safeBlockPlace: true
 
-#ALLOW ADMIN FLIGHT IN SURVIVAL#
-adminFlight: false
+##########################################################
+#SET THIS TO CONTROL ITEMS DROPPED BY ADMINS, YOU CAN SET#
+#THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
+##########################################################
+safeItemDrops: true
 
-#CAN AN ADMIN /GIVE TO ADMINS IN SURVIVAL?#
-#REQUIRES GIVE PERMISSION IS SET TO TRUE
-adminGive: false
+#############
+#SAFE BLOCKS#
+#############
+safeBlocks:
+  - CRAFTING_TABLE
+  - FURNACE
+  - DIRT
+  - SAND
+  - COBBLESTONE
+  - STONE
+  - OAK_SIGN
+  - ACACIA_SIGN
+  - SPRUCE_SIGN
+  - BIRCH_SIGN
+  - DARK_OAK_SIGN
+  - JUNGLE_SIGN
+  - OAK_BOAT
+  - ACACIA_BOAT
+  - SPRUCE_BOAT
+  - BIRCH_BOAT
+  - DARK_OAK_BOAT
+  - JUNGLE_BOAT
+  - TORCH
+  - BARRIER
+  - BONE_MEAL
+  - BEDROCK
+  - DRAGON_EGG
+  - GRASS_BLOCK
+  - LADDER
+  - MAP
+  - BAMOBOO_SAPLING
+  - OAK_SAPLING
+  - ACACIA_SAPLING
+  - SPRUCE_SAPLING
+  - BIRCH_SAPLING
+  - DARK_OAK_SAPLING
+  - JUNGLE_SAPLING
+  - BLACK_BED
+  - WHITE_BED
+  - ORANGE_BED
+  - MAGENTA_BED
+  - LIGHT_BLUE_BED
+  - YELLOW_BED
+  - LIME_BED
+  - PINK_BED
+  - LIGHT_GRAY_BED
+  - GRAY_BED
+  - CYAN_BED
+  - PURPLE_BED
+  - BLUE_BED
+  - BROWN_BED
+  - GREEN_BED
+  - RED_BED
+#####################
+#PERMISSIONS SECTION###############################
+#YOU MAY ADD ANY PERMISSION, FROM ANY PLUGIN HERE!#
+#JUST MAKE SURE TO ONLY USE SPACES, NOT TAB, AND###
+#FOLLOW THE EXACT SAME LAYOUT. NO LIMIT!###########
+#THIS CAN BE BYPASSED //babysitter.bypass.perms\\##
+###################################################
+#<permission reference number>:                   #
+#     <permission>: essentials.command.home       #
+#     <value>: true/false                         #
+###################################################
 
-#DISABLE GIVE COMMAND#
-#ONLY IF NOT OP OR DON'T HAVE BYPASS PERMISSIONS
-#REQUIRES GIVE PERMISSION IS SET TO TRUE
-allowGive: true
-
-#FORCE ADMIN TO PLAYER & TELEPORT HOME WHEN /BABYSIT IS TOGGLED#
-forceSpectate: true
-
-#PERMISSIONS SECTION#
-#YOU MAY ADD ANY PERMISSION, FROM ANY PLUGIN HERE! JUST MAKE SURE TO ONLY USE SPACES, NOT TAB,
-#AND FOLLOW THE EXACT SAME LAYOUT.
-#<permission reference number>:
-#     <permission>: essentials.command.home
-#     <value>: true/false
-
-#SPECIAL PERMISSION LIST#
-#THESE WILL EVALUATE AFTER ADMIN PERMISSIONS
-#ALLOWING THEM TO OVERWRITE DATA FROM ADMIN PERMISSIONS
+#########################
+#SPECIAL PERMISSION LIST#####################
+#THESE WILL EVALUATE AFTER ADMIN PERMISSIONS#############
+#ALLOWING THEM TO OVERWRITE DATA FROM ADMIN PERMISSIONS##
+#THIS CAN BE BYPASSED //babysitter.bypass.specialperms\\#
+#########################################################
 specialPermissionList:
   1:
     permission: minecraft.command.setblock
@@ -55,28 +154,28 @@ specialPermissionList:
 #ADMIN PERMISSION LIST#
 adminPermissionList:
   1:
-    permission: minecraft.command.selector
+    permission: babysitter.command.back
     value: false
   2:
-    permission: vanish.command
+    permission: babysitter.command.vanish
     value: true
   3:
-    permission: inv.see.command
+    permission: babysitter.command.see
     value: true
   4:
-    permission: enderSee.command
+    permission: babysitter.command.edit
     value: true
   5:
-    permission: god.command
+    permission: babysitter.command.god
     value: true
   6:
-    permission: fly.command
+    permission: babysitter.command.fly
     value: true
   7:
     permission: minecraft.command.teleport
     value: true
   8:
-    permission: minecraft.command.give
+    permission: babysitter.command.give
     value: true
   9:
     permission: minecraft.command.gamemode
@@ -84,3 +183,21 @@ adminPermissionList:
   10:
     permission: minecraft.command.effect
     value: true
+  11:
+    permission: minecraft.command.selector
+    value: false
+  12:
+    permission: babysitter.bypass.spec
+    value: false
+  13:
+    permission: babysitter.bypass.give
+    value: false
+  14:
+    permission: babysitter.bypass.tp
+    value: false
+  15:
+    permission: babysitter.bypass.creative
+    value: false
+  16:
+    permission: babysitter.bypass.perms
+    value: false

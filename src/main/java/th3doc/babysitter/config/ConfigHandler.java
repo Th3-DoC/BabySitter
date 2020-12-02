@@ -1,4 +1,4 @@
-package th3doc.babysitter.configs;
+package th3doc.babysitter.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
