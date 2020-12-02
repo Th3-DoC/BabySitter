@@ -10,6 +10,7 @@ public enum Config {
     _invConfig("invConfig.yml"),
     _adminConfig("adminConfig.yml"),
     _playerConfig("playerConfig.yml"),
+    _playerListConfig("playerList.yml"),
     /**
      * FOLDERS
      */
@@ -48,6 +49,8 @@ public enum Config {
     _inv("inv"),
     _armour("armour"),
     _eChest("eChest"),
+    _invBypass("invBypass"),
+    _edited("edited"),
     /**
      * PLAYER CONFIG
      */

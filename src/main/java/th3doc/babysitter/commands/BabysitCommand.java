@@ -48,8 +48,8 @@ public class BabysitCommand implements CommandExecutor {
                         , p.getEnderChest().getContents(),
                         InvType.Survival);
                 //LOAD PERMS
-                main.player().admin().setPermissions(p, true, PermType.Admin);
-                main.player().admin().setPermissions(p, true, PermType.Special);
+                main.player().admin().setPermissions(p, true, PlayerType.Admin);
+                main.player().admin().setPermissions(p, true, PlayerType.Special);
                 if(!p.hasPermission(Perm._vanishBypass.txt)) { main.player().admin().toggleVanish(p); }
                 //CHECK PERMISSIONS
                 if (main.getConfig().getBoolean(Config._forceSpectate.txt)
@@ -108,8 +108,8 @@ public class BabysitCommand implements CommandExecutor {
                 if (!p.hasPermission(Perm._permBypass.txt)) {
                     p.setInvulnerable(false);
                     if (!p.getActivePotionEffects().isEmpty()) { p.performCommand("effect clear"); }
-                    main.player().admin().setPermissions(p, false, PermType.Admin);
-                    main.player().admin().setPermissions(p, false, PermType.Special);
+                    main.player().admin().setPermissions(p, false, PlayerType.Admin);
+                    main.player().admin().setPermissions(p, false, PlayerType.Special);
                     if (main.player().admin().getState(p.getName(), States.Vanish))
                     {
                         main.player().admin().toggleVanish(p);

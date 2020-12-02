@@ -9,6 +9,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import th3doc.babysitter.commands.*;
 import th3doc.babysitter.config.Config;
+import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.events.*;
 import th3doc.babysitter.player.PlayerHandler;
 import th3doc.babysitter.player.data.Chat;
@@ -75,6 +76,19 @@ public final class Main extends JavaPlugin {
     //RELOAD COMMAND
     private void reloadCommand()
     {
+        //PLAYER LIST CONFIG
+        ConfigHandler listConfig = new ConfigHandler(this
+                , Config._playerData.txt
+                , ""
+                , Config._playerListConfig.txt);
+    
+        //INITIALIZE PLAYER BASE
+        if(!listConfig.getConfig().isSet(Config._playerList.txt))
+        {
+            listConfig.getConfig().createSection(Config._playerList.txt);
+        }
+        
+        //INITIALIZE PLAYERS
         for (Player p : this.getServer().getOnlinePlayers())
         {
             this.player.initialize(p);

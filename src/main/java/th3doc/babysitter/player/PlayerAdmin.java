@@ -15,10 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;
 import th3doc.babysitter.config.ConfigHandler;
-import th3doc.babysitter.player.data.Chat;
-import th3doc.babysitter.player.data.Perm;
-import th3doc.babysitter.player.data.PermType;
-import th3doc.babysitter.player.data.States;
+import th3doc.babysitter.player.data.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -99,7 +96,7 @@ public class PlayerAdmin {
                  *
                  */
                 //CHECK IF SPECIAL PERMISSIONS IS TRUE ALWAYS
-                if (main.getConfig().getBoolean(Config._specialPermsAlways.txt)) { setPermissions(p, true, PermType.Special); }
+                if (main.getConfig().getBoolean(Config._specialPermsAlways.txt)) { setPermissions(p, true, PlayerType.Special); }
                 //CHECK ADMIN STATE
                 if (states.get(p.getName()).getBoolean(Config._adminState.txt)
                         || p.hasPermission(Perm._permBypass.txt))
@@ -121,14 +118,14 @@ public class PlayerAdmin {
     }
 
     //LUCK-PERM PERMISSIONS
-    public void setPermissions(Player p, boolean boo, PermType type)
+    public void setPermissions(Player p, boolean boo, PlayerType type)
     {
         if (!p.hasPermission(Perm._permBypass.txt)) {
             ConfigurationSection permissions;
-            if (type == PermType.Admin) {
+            if (type == PlayerType.Admin) {
                 permissions = main.getConfig().getConfigurationSection(Config._adminPermissionList.txt);
             }
-            else if (type == PermType.Special) {
+            else if (type == PlayerType.Special) {
                 if (main.getConfig().getBoolean(Config._specialPermissions.txt)
                         && main.getConfig().getStringList(Config._specialRanks.txt)
                         .contains(main.player().getPermGroup(p)))

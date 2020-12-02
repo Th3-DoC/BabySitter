@@ -41,6 +41,7 @@ public class PlayerHandler {
 
     //PLAYER LIST
     private HashMap<String, String> playerList = new HashMap<>();
+    public HashMap<String, String> list() { return playerList; }
     
     //CHECK ADMIN LIST FOR PLAYER
     public boolean isAdmin(String pName) { return adminPlayer.list().contains(pName); }
@@ -65,21 +66,17 @@ public class PlayerHandler {
         ConfigHandler listConfig = new ConfigHandler(main
                 , Config._playerData.txt
                 , ""
-                , Config._playerList.txt);
-        
-        //INITIALIZE PLAYER BASE
-        if(!listConfig.getConfig().isSet(Config._playerList.txt))
-        {
-            listConfig.getConfig().createSection(Config._playerList.txt);
-        }
+                , Config._playerListConfig.txt);
         
         //CHECK PLAYER LIST ISN'T EMPTY
-        if(!listConfig.getConfig().getConfigurationSection(Config._playerList.txt).getValues(false).isEmpty())
+        if(listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0"))
         {
-            for(String key : listConfig.getConfig().getConfigurationSection(Config._playerList.txt).getKeys(false))
+            for(String key : listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
+                    .getKeys(false))
             {
                 ConfigurationSection configSection =
-                        listConfig.getConfig().getConfigurationSection(Config._playerList.txt).getConfigurationSection(key);
+                        listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
+                                .getConfigurationSection(key);
                 assert configSection != null;
                 String name = configSection.getString(Config._playerName.txt);
                 String uuid = configSection.getString(Config._playerUUID.txt);
@@ -89,7 +86,7 @@ public class PlayerHandler {
         }
         
         //CHECK PLAYER EXISTS
-        if(!playerList.containsKey(p.getName()))
+        if(!playerList.containsValue(p.getUniqueId().toString()))
         {
             playerList.put(p.getName(), p.getUniqueId().toString());
             ConfigurationSection section = listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
@@ -97,7 +94,7 @@ public class PlayerHandler {
             section.createSection(Config._playerName.txt);
             section.set(Config._playerName.txt, p.getName());
             section.createSection(Config._playerUUID.txt);
-            section.set(Config._playerUUID.txt, p.getName());
+            section.set(Config._playerUUID.txt, p.getUniqueId().toString());
         }
     
         //PLAYER CONFIG

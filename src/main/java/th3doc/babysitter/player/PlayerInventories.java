@@ -10,7 +10,10 @@ import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.player.data.InvType;
 import th3doc.babysitter.player.data.Perm;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class PlayerInventories {
     
@@ -27,6 +30,12 @@ public class PlayerInventories {
     private HashMap<UUID, ItemStack[]> babysitArmour = new HashMap<>();
     private HashMap<UUID, ItemStack[]> babysitEChest = new HashMap<>();
     
+    //CONFIG
+    public ConfigHandler config(String uuid)
+    {
+        return new ConfigHandler(main, Config._playerData.txt, uuid, Config._invConfig.txt);
+    }
+    
     //INITIALIZE
     public void initialize(Player p)
     {
@@ -38,28 +47,39 @@ public class PlayerInventories {
              *
              */
             //LOAD INVENTORY CONFIG
-            ConfigHandler config =
-                    new ConfigHandler(main, Config._playerData.txt, p.getUniqueId().toString(), Config._invConfig.txt);
+            ConfigHandler config = config(p.getUniqueId().toString());
             
             //CHECK CONFIG VALUES, CREATE IF EMPTY
-            //SURVIVAL INVENTORY
+            //inv bypass
+            if(!config.getConfig().isSet(Config._invBypass.txt))
+            {
+                config.getConfig().createSection(Config._invBypass.txt);
+                config.getConfig().set(Config._invBypass.txt, false);
+            }
+            //edited
+            if(!config.getConfig().isSet(Config._edited.txt))
+            {
+                config.getConfig().createSection(Config._edited.txt);
+                config.getConfig().set(Config._edited.txt, false);
+            }
+            //survival inv
             if(!config.getConfig().isSet(Config._survivalInv.txt))
             {
-                //CREATE SECTIONS
+                //create sections
                 config.getConfig().createSection(Config._survivalInv.txt)
                         .createSection(Config._inv.txt);
                 ConfigurationSection survivalInv = config.getConfig().getConfigurationSection(Config._survivalInv.txt);
                 survivalInv.createSection(Config._armour.txt);
                 survivalInv.createSection(Config._eChest.txt);
-                //SET SECTIONS
+                //set sections
                 survivalInv.set(Config._inv.txt, new ItemStack[0]);
                 survivalInv.set(Config._armour.txt, new ItemStack[0]);
                 survivalInv.set(Config._eChest.txt, new ItemStack[0]);
             }
-            //BABYSIT INVENTORY
+            //babysit inv
             if(!config.getConfig().isSet(Config._babysitInv.txt))
             {
-                //CREATE SECTIONS
+                //create sections
                 config.getConfig().createSection(Config._babysitInv.txt)
                         .createSection(Config._inv.txt);
                 ConfigurationSection babysitInv = config.getConfig().getConfigurationSection(Config._babysitInv.txt);
@@ -112,7 +132,7 @@ public class PlayerInventories {
     private HashMap<String, String> inventoryEdit = new HashMap<>();
     public void setEditingInv(Player p, String guiName) { inventoryEdit.put(p.getName(), guiName); }
     
-    //INVENTORY CHECK FOR SAVE
+    //INVENTORY CHECK FOR ADMIN SAVE
     private HashMap<String, ItemStack[]> invToCheck = new HashMap<>();
     public ItemStack[] invToCheck(Player p) { return invToCheck.get(p.getName()); }
     public boolean isCheckingInv(Player p) { return invToCheck.containsKey(p.getName()); }
@@ -121,39 +141,50 @@ public class PlayerInventories {
     //SAVE EDITED INVENTORY
     public void saveInvEdit(Player p, InventoryCloseEvent e)
     {
-        if(!p.hasPermission(Perm._invBypass.txt))
+        //ARE WE EDITING AN INVENTORY
+        if(inventoryEdit.containsKey(p.getName()))
         {
-            //ARE WE EDITING AN INVENTORY
-            if(inventoryEdit.containsKey(p.getName()))
+            String[] title = e.getView().getTitle().split(" ");
+            if(e.getView().getTitle().equals(inventoryEdit.get(p.getName())))
             {
-                String[] title = e.getView().getTitle().split(" ");
-                if(main.getServer().getPlayer(title[0]) instanceof Player)
+                ItemStack[] event_inv = e.getInventory().getContents();
+                List<ItemStack> save_inv = new ArrayList<>();
+                for(ItemStack item : event_inv)
                 {
-                    Player player = main.getServer().getPlayer(title[0]);
-                    assert player != null;
-                    if(e.getView().getTitle().equals(inventoryEdit.get(p.getName())))
+                    if(save_inv.size() < 41) { save_inv.add(item); }
+                    else { break; }
+                }
+                ItemStack[] new_inv = save_inv.toArray(new ItemStack[0]);
+                if(main.getServer().getPlayer(title[0]) instanceof Player
+                        && !main.getServer().getPlayer(title[0]).hasPermission(Perm._invBypass.txt))
+                {
+                    if(title[1].equals(InvType.Inventory.name()))
+                    { main.getServer().getPlayer(title[0]).getInventory().setContents(new_inv); }
+                    else if(title[1].equals(InvType.EnderChest.name()))
+                    { main.getServer().getPlayer(title[0]).getEnderChest().setContents(new_inv); }
+                }
+                else if(main.player().list().containsKey(title[0]))
+                {
+                    String uuid = main.player().list().get(title[0]);
+                    if(!config(uuid).getConfig().getBoolean(Config._invBypass.txt))
                     {
-                        if(inventoryEdit.get(p.getName()).contains(InvType.Inventory.name()))
+                        if(title[1].equals(InvType.Inventory.name()))
                         {
-                            ItemStack[] event_inv = e.getInventory().getContents();
-                            List<ItemStack> save_inv = new ArrayList<>();
-                            for(ItemStack item : event_inv)
-                            {
-                                if(save_inv.size() < 41) { save_inv.add(item); }
-                                else { break; }
-                            }
-                            ItemStack[] new_inv = save_inv.toArray(new ItemStack[0]);
-                            player.getInventory().setContents(new_inv);
+                            config(uuid).getConfig().getConfigurationSection(Config._survivalInv.txt)
+                                    .set(Config._inv.txt, e.getInventory().getContents());
+                            config(uuid).getConfig().set(Config._edited.txt, true);
                         }
-                        if(inventoryEdit.get(p.getName()).contains(InvType.EnderChest.name()))
+                        else if(title[1].equals(InvType.EnderChest.name()))
                         {
-                            player.getEnderChest().setContents(e.getInventory().getContents());
+                            config(uuid).getConfig().getConfigurationSection(Config._survivalInv.txt)
+                                    .set(Config._eChest.txt, e.getInventory().getContents());
+                            config(uuid).getConfig().set(Config._edited.txt, true);
                         }
-                        inventoryEdit.remove(p.getName());
                     }
                 }
             }
         }
+        inventoryEdit.remove(p.getName());
     }
     
     //SAVE/SET INVENTORIES
@@ -218,6 +249,11 @@ public class PlayerInventories {
     //MEMORY DUMP
     public void memoryDump(Player p)
     {
+        //SAVE INV-BYPASS TRUE?FALSE
+        if(p.hasPermission(Perm._invBypass.txt))
+        { config(p.getUniqueId().toString()).getConfig().set(Config._invBypass.txt, true); }
+        
+        //SAVE INVENTORY
         if(!main.player().isAdmin(p.getName())
                 && !p.hasPermission(Perm._invBypass.txt))
         {
@@ -227,11 +263,13 @@ public class PlayerInventories {
                     , p.getEnderChest().getContents()
                     , InvType.Survival);
         }
-        //SURVIVAL INV
+        
+        //DUMP VM
+        //survival inv
         survivalInv.remove(p.getUniqueId());
         survivalArmour.remove(p.getUniqueId());
         survivalEChest.remove(p.getUniqueId());
-        //BABYSIT INV
+        //babysit inv
         babysitInv.remove(p.getUniqueId());
         babysitArmour.remove(p.getUniqueId());
         babysitEChest.remove(p.getUniqueId());
