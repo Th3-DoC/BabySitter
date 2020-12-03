@@ -11,6 +11,7 @@ public enum Config {
     _adminConfig("adminConfig.yml"),
     _playerConfig("playerConfig.yml"),
     _playerListConfig("playerList.yml"),
+    _rewardsConfig("rewardsLists.yml"),
     /**
      * FOLDERS
      */
@@ -51,6 +52,12 @@ public enum Config {
     _eChest("eChest"),
     _invBypass("invBypass"),
     _edited("edited"),
+    /**
+     *Rewards Config
+     */
+    _rewardSections("rewardSections"),
+    _baseSection("rewards"),
+    _firstJoinItems("firstJoinItems"),
     /**
      * PLAYER CONFIG
      */

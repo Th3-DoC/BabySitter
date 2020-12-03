@@ -87,7 +87,7 @@ public class PlayerCommandPreProcess implements Listener {
                 //CHECK SECOND ARGUMENT FOR PLAYER NAME
                 if (Arrays.toString(main.getServer().getOnlinePlayers().toArray()).contains(args[1])
                         && main.player().isAdmin(args[1])
-                        && !main.player().admin().getState(args[1], States.Admin))
+                        && !main.player().admin().getState(args[1], States.Babysit))
                 {
                     e.getPlayer().sendMessage(Chat._adminInSurvival.txt);
                     e.setCancelled(true);

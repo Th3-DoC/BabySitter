@@ -25,7 +25,7 @@ public class PlayerJoin implements Listener {
         if (main.player().isAdmin(p.getName()))
         {
             if ((main.player().admin().getState(p.getName(), States.Vanish)
-                    && main.player().admin().getState(p.getName(), States.Admin))
+                    && main.player().admin().getState(p.getName(), States.Babysit))
                 || (main.player().admin().getState(p.getName(), States.Vanish)
                     && p.hasPermission(Perm._permBypass.txt)))
             {

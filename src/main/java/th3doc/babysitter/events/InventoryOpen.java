@@ -19,7 +19,7 @@ public class InventoryOpen implements Listener {
     public void inventoryOpenEvent(InventoryOpenEvent e) {
         Player p = (Player) e.getPlayer();
         if(main.player().isAdmin(p .getName())
-                && main.player().admin().getState(p.getName(), States.Admin))
+                && main.player().admin().getState(p.getName(), States.Babysit))
         {
             if(!p.hasPermission(Perm._invBypass.txt))
             {

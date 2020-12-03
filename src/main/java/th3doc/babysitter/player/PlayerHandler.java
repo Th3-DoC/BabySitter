@@ -20,12 +20,17 @@ public class PlayerHandler {
     public PlayerHandler(Main main)
     {
         this.main = main;
+        rewards = new Rewards(main);
         inventories = new PlayerInventories(main);
         locations = new PlayerLocation(main);
         adminPlayer = new PlayerAdmin(main);
     }
 
     //PLAYER DATA
+    
+    //REWARDS
+    private Rewards rewards;
+    public Rewards rewards() { return rewards; }
 
     //INVENTORIES
     private PlayerInventories inventories;
@@ -49,7 +54,7 @@ public class PlayerHandler {
     //INITIALIZE
     public void initialize(Player p)
     {
-        //ADD PLAYER NAME TO CONFIG FOLDER IF NONE EXISTS
+         //ADD PLAYER NAME TO CONFIG FOLDER IF NONE EXISTS
         File file;
         file = new File(main.getDataFolder(),
                 File.separator + Config._playerData.txt +
@@ -67,8 +72,10 @@ public class PlayerHandler {
                 , Config._playerData.txt
                 , ""
                 , Config._playerListConfig.txt);
-        
-        //CHECK PLAYER LIST ISN'T EMPTY
+        //check player isn't empty
+        if(!listConfig.getConfig().isSet(Config._playerList.txt)) {
+            listConfig.getConfig().createSection(Config._playerList.txt);
+        }
         if(listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0"))
         {
             for(String key : listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
@@ -85,54 +92,56 @@ public class PlayerHandler {
             }
         }
         
-        //CHECK PLAYER EXISTS
+        //check player exists
         if(!playerList.containsValue(p.getUniqueId().toString()))
         {
+            String size = Integer.toString(playerList.size());
+            if(!listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0")) {
+                size = "0";
+            }
             playerList.put(p.getName(), p.getUniqueId().toString());
             ConfigurationSection section = listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
-                    .createSection(Integer.toString(playerList.size()));
+                    .createSection(size);
             section.createSection(Config._playerName.txt);
             section.set(Config._playerName.txt, p.getName());
             section.createSection(Config._playerUUID.txt);
             section.set(Config._playerUUID.txt, p.getUniqueId().toString());
         }
-    
+        //save config
+        listConfig.save();
         //PLAYER CONFIG
         ConfigHandler playerConfig = new ConfigHandler(main
                 , Config._playerData.txt
                 , p.getUniqueId().toString()
                 , Config._playerConfig.txt);
         
-        //INITIALIZE PLAYER CONFIG
+        //initialize
         if(!playerConfig.getConfig().isSet(Config._joinDate.txt))
         {
             playerConfig.getConfig().createSection(Config._joinDate.txt);
-            playerConfig.getConfig().set(Config._joinDate.txt, getDate());
+            playerConfig.getConfig().set(Config._joinDate.txt, getDate("time"));
     
-            //FIRST JOIN
-            
+            //first join
+    
+            playerConfig.save();
         }
-
         //INITIALIZE PLAYER ACCESS
+        rewards.initialize();
         adminPlayer.initialize(p);
         inventories.initialize(p);
         locations.initialize(p);
     }
     
     //GET DATE
-    private String getDate()
+    private String getDate(String type)
     {
         Date now = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        return format.format(now);
-    }
-    
-    //GET TIME
-    private String getTime()
-    {
-        Date now = new Date();
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
-        return format.format(now);
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String[] split = format.format(now).split(" ");
+        String send = "";
+        if(type.equals("date")) { send = split[0]; }
+        if(type.equals("time")) { send = split[1]; }
+        return send;
     }
 
     //GET PLAYER PERMISSION HANDLER GROUP

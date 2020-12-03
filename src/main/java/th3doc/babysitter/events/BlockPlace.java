@@ -22,7 +22,7 @@ public class BlockPlace implements Listener {
         Player p = e.getPlayer();
         
         if(((main.player().isAdmin(p.getName())
-                && main.player().admin().getState(p.getName(), States.Admin))
+                && main.player().admin().getState(p.getName(), States.Babysit))
             && main.getConfig().getBoolean(Config._safeBlockPlace.txt)))
         {
             if(!main.getConfig().getStringList(Config._safeBlocks.txt)

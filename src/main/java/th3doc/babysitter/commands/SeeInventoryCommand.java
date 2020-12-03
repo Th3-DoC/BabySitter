@@ -8,6 +8,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import th3doc.babysitter.Main;
+import th3doc.babysitter.config.Config;
 import th3doc.babysitter.player.data.PlayerType;
 import th3doc.babysitter.player.gui.InvGUI;
 import th3doc.babysitter.player.data.Chat;
@@ -42,9 +43,12 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
         {
             //CHECK PLAYER IS VALID
             //CHECK ARGUMENT LENGTH IS VALID /SEE <PLAYER> <INVENTORY TYPE> <EDIT>
+            String offlineUUID = main.player().list().get(args[1]);
             if (args.length < 3
                     || args.length > 4
-                    || (!(main.getServer().getPlayer(args[1]) instanceof Player))
+                    || (!(main.getServer().getPlayer(args[1]) instanceof Player) && args[0].equals(PlayerType.Online.name()))
+                    || (args[0].equals(PlayerType.Offline.name()) && !main.player().inventory()
+                            .config(offlineUUID).getConfig().isSet(Config._survivalInv.txt))
                     || (args[1].contains(p.getName()) && !p.hasPermission(Perm._seeBypass.txt))
                     || !inventoryTypes.contains(args[2])
                     || !playerType.contains(args[0]))
@@ -91,6 +95,10 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
                 {
                     players.clear();
                     players.addAll(main.player().list().keySet());
+                    for(Player player : main.getServer().getOnlinePlayers())
+                    {
+                        players.remove(player.getName());
+                    }
                 }
                 StringUtil.copyPartialMatches(args[1], players, tabComplete);
                 Collections.sort(tabComplete);

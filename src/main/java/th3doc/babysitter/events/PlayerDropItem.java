@@ -21,7 +21,7 @@ public class PlayerDropItem implements Listener {
     {
         Player p = e.getPlayer();
         if(main.player().isAdmin(p .getName())
-                && main.player().admin().getState(p.getName(), States.Admin))
+                && main.player().admin().getState(p.getName(), States.Babysit))
         {
             if(!p.hasPermission(Perm._itemDropBypass.txt)
                         && main.getConfig().getBoolean(Config._safeItemDrop.txt))

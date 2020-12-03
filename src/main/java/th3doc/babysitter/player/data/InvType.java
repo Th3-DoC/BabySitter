@@ -6,6 +6,7 @@ public enum InvType {
     Babysit,
     Inventory,
     EnderChest,
-    OpenInventory,
-    EditMode
+    EditMode,
+    FirstJoin,
+    RankPrize
 }

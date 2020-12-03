@@ -30,7 +30,7 @@ public class BabysitCommand implements CommandExecutor {
         if (p.hasPermission(Perm._babysitCommand.txt))
         {
             //CHECK ADMIN STATE
-            if (!main.player().admin().getState(p.getName(), States.Admin))
+            if (!main.player().admin().getState(p.getName(), States.Babysit))
             {
                 //CHECK PLAYER TARGET OR BYPASS PERMISSIONS TO CONTINUE
                 if (!p.hasPermission(Perm._forceSpectator.txt)
@@ -78,7 +78,7 @@ public class BabysitCommand implements CommandExecutor {
                     p.setFlying(true);
                 }
                 p.sendMessage(Chat._babySittingTime.txt);
-                main.player().admin().setState(p, true, States.Admin);
+                main.player().admin().setState(p, true, States.Babysit);
             }
             else
             {
@@ -125,7 +125,7 @@ public class BabysitCommand implements CommandExecutor {
                     }
                 }
                 p.sendMessage(Chat._babySittingDone.txt);
-                main.player().admin().setState(p, false, States.Admin);
+                main.player().admin().setState(p, false, States.Babysit);
             }
         }
         return false;

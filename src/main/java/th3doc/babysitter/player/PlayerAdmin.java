@@ -171,7 +171,7 @@ public class PlayerAdmin {
     private HashMap<String, ConfigurationSection> states = new HashMap<>();
     public boolean getState(String pName, States state)
     {
-        if (state == States.Admin) { return states.get(pName).getBoolean(Config._adminState.txt); }
+        if (state == States.Babysit) { return states.get(pName).getBoolean(Config._adminState.txt); }
         if (state == States.Fly) { return states.get(pName).getBoolean(Config._flyState.txt); }
         if (state == States.Vanish) { return states.get(pName).getBoolean(Config._vanishState.txt); }
         return false;
@@ -182,7 +182,7 @@ public class PlayerAdmin {
                 new ConfigHandler(main, Config._playerData.txt, p.getUniqueId().toString(), Config._adminConfig.txt);
         ConfigurationSection configSection = config.getConfig().getConfigurationSection(Config._states.txt);
         String stateSection = "";
-        if (state == States.Admin) { stateSection = Config._adminState.txt; }
+        if (state == States.Babysit) { stateSection = Config._adminState.txt; }
         if (state == States.Vanish) { stateSection = Config._vanishState.txt; }
         if (state == States.Fly) { stateSection = Config._flyState.txt; }
         states.get(p.getName()).set(stateSection, boo);

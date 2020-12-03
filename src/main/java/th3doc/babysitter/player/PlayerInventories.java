@@ -72,9 +72,9 @@ public class PlayerInventories {
                 survivalInv.createSection(Config._armour.txt);
                 survivalInv.createSection(Config._eChest.txt);
                 //set sections
-                survivalInv.set(Config._inv.txt, new ItemStack[0]);
-                survivalInv.set(Config._armour.txt, new ItemStack[0]);
-                survivalInv.set(Config._eChest.txt, new ItemStack[0]);
+                survivalInv.set(Config._inv.txt, p.getInventory().getContents());
+                survivalInv.set(Config._armour.txt, p.getInventory().getArmorContents());
+                survivalInv.set(Config._eChest.txt, p.getEnderChest().getContents());
             }
             //babysit inv
             if(!config.getConfig().isSet(Config._babysitInv.txt))
@@ -254,15 +254,11 @@ public class PlayerInventories {
         { config(p.getUniqueId().toString()).getConfig().set(Config._invBypass.txt, true); }
         
         //SAVE INVENTORY
-        if(!main.player().isAdmin(p.getName())
-                && !p.hasPermission(Perm._invBypass.txt))
-        {
-            saveInventory(p
-                    , p.getInventory().getContents()
-                    , p.getInventory().getArmorContents()
-                    , p.getEnderChest().getContents()
-                    , InvType.Survival);
-        }
+        saveInventory(p
+                , p.getInventory().getContents()
+                , p.getInventory().getArmorContents()
+                , p.getEnderChest().getContents()
+                , InvType.Survival);
         
         //DUMP VM
         //survival inv
