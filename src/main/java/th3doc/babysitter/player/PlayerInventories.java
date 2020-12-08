@@ -9,6 +9,7 @@ import th3doc.babysitter.config.Config;
 import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.player.data.InvType;
 import th3doc.babysitter.player.data.Perm;
+import th3doc.babysitter.player.data.States;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -254,6 +255,8 @@ public class PlayerInventories {
         { config(p.getUniqueId().toString()).getConfig().set(Config._invBypass.txt, true); }
         
         //SAVE INVENTORY
+        if (main.player().isAdmin(p.getName())
+                && !main.player().admin().getState(p.getName(), States.Babysit))
         saveInventory(p
                 , p.getInventory().getContents()
                 , p.getInventory().getArmorContents()
