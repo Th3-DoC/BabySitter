@@ -1,51 +1,83 @@
 package th3doc.babysitter;
 
-import net.luckperms.api.LuckPerms;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import th3doc.babysitter.commands.*;
 import th3doc.babysitter.config.Config;
-import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.events.*;
 import th3doc.babysitter.player.PlayerHandler;
 import th3doc.babysitter.player.data.Chat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
 
 public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable()
     {
-        registerLuckPerms();
+        if(!setupPermissions())
+        {
+            Bukkit.getLogger().info("Error Loading Permission Handler, stopping plugin.");
+            Bukkit.getPluginManager().getPlugin(this.getName());
+        }
         defaultConfigStatus();
         registerCommands();
         registerEvents();
-        player = new PlayerHandler(this);
+        player = new HashMap<>();
+        groups = new ArrayList<>();
+        setGroups();
         reloadCommand();
         this.getLogger().info(Chat._onEnable.txt);
 
     }
 
     //GET PLAYER
-    private PlayerHandler player;
-    public PlayerHandler player() { return player; }
-
-    //LUCKPERMS ACCESS
-    private LuckPerms api;
-    public LuckPerms getLuckPerms() { return api; }
-
-    //REGISTER LUCKPERMS
-    private void registerLuckPerms()
+    private static HashMap<UUID, PlayerHandler> player;
+    public void newPlayer(Player p)
     {
-        RegisteredServiceProvider<LuckPerms> provider = Bukkit.getServicesManager().getRegistration(LuckPerms.class);
-        if (provider != null) { api = provider.getProvider(); }
+        Main main = this;
+        new BukkitRunnable()
+        {
+            @Override
+            public void run()
+            {
+                player.put(p.getUniqueId(), new PlayerHandler(main, p));
+            }
+        } .runTaskAsynchronously(this);
     }
+    public PlayerHandler player(UUID uuid) { return player.get(uuid); }
+
+    //REGISTER PERMISSIONS
+    private Permission perms;
+    public Permission getPerms() { return perms; }
+    private boolean setupPermissions() {
+        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+        perms = rsp.getProvider();
+        return perms != null;
+    }
+    
+    //PERM GROUPS
+    private List<String> groups;
+    private void setGroups()
+    {
+        new BukkitRunnable() {
+            @Override
+            public void run()
+            {
+                groups.clear();
+                groups.addAll(Arrays.asList(perms.getGroups()));
+            }
+        } .runTaskTimerAsynchronously(this, 0L, 6000L);
+    }
+    public List<String> getGroups() { return groups; }
 
     //REGISTER COMMANDS
     private void registerCommands()
@@ -76,22 +108,10 @@ public final class Main extends JavaPlugin {
     //RELOAD COMMAND
     private void reloadCommand()
     {
-        //PLAYER LIST CONFIG
-        ConfigHandler listConfig = new ConfigHandler(this
-                , Config._playerData.txt
-                , ""
-                , Config._playerListConfig.txt);
-    
-        //INITIALIZE PLAYER BASE
-        if(!listConfig.getConfig().isSet(Config._playerList.txt))
-        {
-            listConfig.getConfig().createSection(Config._playerList.txt);
-        }
-        
         //INITIALIZE PLAYERS
         for (Player p : this.getServer().getOnlinePlayers())
         {
-            this.player.initialize(p);
+            newPlayer(p);
         }
     }
 

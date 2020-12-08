@@ -1,4 +1,4 @@
-package th3doc.babysitter.player;
+package th3doc.babysitter.player.location;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

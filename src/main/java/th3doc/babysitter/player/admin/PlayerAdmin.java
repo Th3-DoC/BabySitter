@@ -1,4 +1,4 @@
-package th3doc.babysitter.player;
+package th3doc.babysitter.player.admin;
 
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.model.user.User;
@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;
 import th3doc.babysitter.config.ConfigHandler;
+import th3doc.babysitter.player.PlayerHandler;
 import th3doc.babysitter.player.data.*;
 
 import java.util.ArrayList;
@@ -24,24 +25,19 @@ import java.util.List;
 public class PlayerAdmin {
 
     //CONSTRUCTOR
-    private Main main;
-    public PlayerAdmin(Main main) { this.main = main; }
-
-    //ADMIN LIST
-    private List<String> adminList = new ArrayList<>();
-    public List<String> list() { return adminList; }
-
-    //INITIALIZE PLAYER
-    public void initialize(Player p)
+    private final PlayerHandler player;
+    private final AdminConfig config;
+    public PlayerAdmin(PlayerHandler player)
     {
-        Group group = main.getLuckPerms().getGroupManager().getGroup(main.player().getPermGroup(p));
+        this.player = player;
+        this.config = new AdminConfig(player);
         //CHECK GROUP IS VALID
-        if (group != null)
+        if (!player.getPermGroup().equals(""))
         {
             //CHECK PLAYER IS ADMIN RANK, ELSE RETURN;
-            if (main.getConfig().getStringList(Config._adminRanks.txt)
-                    .contains(main.player().getPermGroup(p))
-                || p.hasPermission(Perm._permBypass.txt))
+            if (player.getMain().getConfig().getStringList(Config._adminRanks.txt)
+                    .contains(player.getPermGroup())
+                    || p.hasPermission(Perm._permBypass.txt))
             {
                 //ADD TO ADMIN LIST
                 adminList.add(p.getName());
@@ -52,49 +48,7 @@ public class PlayerAdmin {
                  *
                  */
                 //LOAD ADMIN CONFIG
-                ConfigHandler config =
-                        new ConfigHandler(main
-                                , Config._playerData.txt
-                                , p.getUniqueId().toString()
-                                , Config._adminConfig.txt);
-
-                //CHECK ADMIN CONFIG VALUES, CREATE IF EMPTY
-                //STATES
-                if (!config.getConfig().isSet(Config._states.txt))
-                {
-                    config.getConfig().createSection(Config._states.txt);
-                    ConfigurationSection states = config.getConfig().getConfigurationSection(Config._states.txt);
-                    //ADMIN STATE
-                    if (!states.isSet(Config._adminState.txt))
-                    {
-                        states.createSection(Config._adminState.txt);
-                        states.set(Config._adminState.txt, "false");
-                    }
-                    //VANISH STATE
-                    if (!states.isSet(Config._vanishState.txt))
-                    {
-                        states.createSection(Config._vanishState.txt);
-                        states.set(Config._vanishState.txt, "false");
-                    }
-                    //FLY STATE
-                    if (!states.isSet(Config._flyState.txt))
-                    {
-                        states.createSection(Config._flyState.txt);
-                        states.set(Config._flyState.txt, "false");
-                    }
-                    //SAVE CONFIG
-                    config.save();
-                }
-                //INITIALIZE VARIABLES
-                states.put(p.getName(), config.getConfig().getConfigurationSection(Config._states.txt));
-                /**
-                 * END LOAD/CREATE CONFIG
-                 */
-                /**
-                 *
-                 * ACTIVATE STATES WITH TRUE VALUES
-                 *
-                 */
+                configs.put(p.getName(), new AdminConfig(main, p));
                 //CHECK IF SPECIAL PERMISSIONS IS TRUE ALWAYS
                 if (main.getConfig().getBoolean(Config._specialPermsAlways.txt)) { setPermissions(p, true, PlayerType.Special); }
                 //CHECK ADMIN STATE
@@ -116,6 +70,10 @@ public class PlayerAdmin {
             }
         }
     }
+
+    //ADMIN LIST
+    private static List<String> adminList = new ArrayList<>();
+    public List<String> list() { return adminList; }
 
     //LUCK-PERM PERMISSIONS
     public void setPermissions(Player p, boolean boo, PlayerType type)
@@ -148,17 +106,9 @@ public class PlayerAdmin {
                     //CHECK PERMISSION IS VALID
                     if (permission != null)
                     {
-                        boolean v = false;
-                        boolean set = false;
                         if (!value && p.hasPermission(permission)) { continue; }
-                        if (boo && value) { if (!p.hasPermission(permission)) { v = true; set = true; } }
-                        if (!boo && value) { if (p.hasPermission(permission)) { set = true; } }
-                        if (set) {
-                            User user = main.getLuckPerms().getUserManager().getUser(p.getUniqueId());
-                            Node node = Node.builder(permission).value(v).build();
-                            user.data().add(node);
-                            main.getLuckPerms().getUserManager().saveUser(user);
-                        }
+                        if (boo && value) { if (!p.hasPermission(permission)) { main.getPerms().playerAdd(p, permission); } }
+                        if (!boo && value) { if (p.hasPermission(permission)) { main.getPerms().playerRemove(p, permission); } }
                     }
                 }
                 p.recalculatePermissions();
@@ -204,7 +154,7 @@ public class PlayerAdmin {
 
     //VANISH TOGGLE
     private List<String> vanishedAdmins = new ArrayList<>();
-    protected List<String> getVanishedAdmins() { return vanishedAdmins; }
+    public List<String> getVanishedAdmins() { return vanishedAdmins; }
     public void toggleVanish(Player p)
     {
 

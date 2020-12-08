@@ -1,6 +1,5 @@
-package th3doc.babysitter.player;
+package th3doc.babysitter.player.rewards;
 
-import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;

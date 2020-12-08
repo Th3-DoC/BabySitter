@@ -41,13 +41,14 @@ public class InvGUI {
         }
         if(state.equals(PlayerType.Offline.name()))
         {
+            String offlineUUID = main.player().list().get(viewee);
             try
             {
-                inventory = ((List<String>) main.player().inventory().config(viewee).getConfig()
+                inventory = ((List<String>) main.player().inventory().config(offlineUUID).getConfig()
                         .getConfigurationSection(Config._survivalInv.txt)
                         .get(Config._inv.txt)).toArray(new ItemStack[0]);
                 
-                eChest = ((List<String>) main.player().inventory().config(viewee).getConfig()
+                eChest = ((List<String>) main.player().inventory().config(offlineUUID).getConfig()
                         .getConfigurationSection(Config._survivalInv.txt)
                         .get(Config._eChest.txt)).toArray(new ItemStack[0]);
             }

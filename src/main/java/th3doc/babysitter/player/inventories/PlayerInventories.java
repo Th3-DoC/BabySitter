@@ -1,4 +1,4 @@
-package th3doc.babysitter.player;
+package th3doc.babysitter.player.inventories;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

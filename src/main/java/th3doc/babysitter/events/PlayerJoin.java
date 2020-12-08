@@ -19,14 +19,14 @@ public class PlayerJoin implements Listener {
     {
         Player p = e.getPlayer();
         //INITIALIZE PLAYER
-        main.player().initialize(p);
+        main.newPlayer(p);
 
         //CHECK VANISH STATE && ADMIN STATE
-        if (main.player().isAdmin(p.getName()))
+        if (main.player(p.getUniqueId()).isAdmin(p.getName()))
         {
-            if ((main.player().admin().getState(p.getName(), States.Vanish)
-                    && main.player().admin().getState(p.getName(), States.Babysit))
-                || (main.player().admin().getState(p.getName(), States.Vanish)
+            if ((main.player(p.getUniqueId()).admin().getState(p.getName(), States.Vanish)
+                    && main.player(p.getUniqueId()).admin().getState(p.getName(), States.Babysit))
+                || (main.player(p.getUniqueId()).admin().getState(p.getName(), States.Vanish)
                     && p.hasPermission(Perm._permBypass.txt)))
             {
                 e.setJoinMessage("");
@@ -34,6 +34,6 @@ public class PlayerJoin implements Listener {
         }
 
         //CHECK FOR VANISHED ADMIN AND HIDE FROM PLAYER
-        main.player().vanishAdmin(p);
+        main.player(p.getUniqueId()).vanishAdmin(p);
     }
 }

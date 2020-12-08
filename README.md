@@ -5,12 +5,15 @@ Lightweight MC Admin Plugin.
 
 Add Rule Book Command to save (item in hand or items in hotbar) for first join players. Integrated With Rewards sytstem
 
-Add player initialize check for old name file before making a new name.yml
-
 Add Jail System
 
 Add Auto Rank System
 
+Add Last Joined
+
+Add PlayTime for rewards
+
+pvp toggle
 
 
 
