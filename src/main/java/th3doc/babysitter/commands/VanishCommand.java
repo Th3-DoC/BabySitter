@@ -12,7 +12,7 @@ import th3doc.babysitter.player.data.Perm;
 public class VanishCommand implements CommandExecutor {
 
     //CONSTRUCTOR
-    private Main main;
+    private final Main main;
     public VanishCommand(Main main) { this.main = main; }
 
     @Override
@@ -25,7 +25,7 @@ public class VanishCommand implements CommandExecutor {
         }
         Player p = (Player) sender;
 
-        if (p.hasPermission(Perm._vanishCommand.txt)) { main.player().admin().toggleVanish(p); }
+        if (p.hasPermission(Perm._vanishCommand.txt)) { main.getPlayer(p.getUniqueId()).admin().toggleVanish(); }
         return false;
     }
 }

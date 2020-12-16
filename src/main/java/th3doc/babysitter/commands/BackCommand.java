@@ -12,7 +12,7 @@ import th3doc.babysitter.player.data.Perm;
 public class BackCommand implements CommandExecutor {
 
     //CONSTRUCTOR
-    private Main main;
+    private final Main main;
     public BackCommand(Main main) { this.main = main; }
 
     @Override
@@ -27,9 +27,9 @@ public class BackCommand implements CommandExecutor {
         
         Player p = (Player) sender;
         if (p.hasPermission(Perm._tpBypass.txt)
-                && main.player().location().getSurvivalLastKnown(p) != null)
+                && main.getPlayer(p.getUniqueId()).location().getSurvivalLastKnown() != null)
         {
-            p.teleport(main.player().location().getSurvivalLastKnown(p));
+            p.teleport(main.getPlayer(p.getUniqueId()).location().getSurvivalLastKnown());
         }
         return false;
     }

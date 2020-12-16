@@ -18,6 +18,7 @@ public enum Perm {
     _invBypass("babysitter.bypass.inv"),
     _seeBypass("babysitter.bypass.see"),
     _itemDropBypass("babysitter.bypass.item"),
+    _flyBypass("babysitter.bypass.flight"),
     _vanishBypass("babysitter.bypass.vanish");
 
     public String txt;

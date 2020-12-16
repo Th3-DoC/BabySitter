@@ -16,22 +16,27 @@ import java.util.HashMap;
 
 public class PlayerConfig {
 
-    private static HashMap<String, String> playerList;//name/uuid
-    public HashMap<String, String> list() { return playerList; }
+    //VARIABLES
+    public static HashMap<String, String> playerList;//name/uuid
+    private final String joinDate;
+    
+    
     //CONSTRUCTOR
-    final PlayerHandler player;
     public PlayerConfig(PlayerHandler player)
     {
         //player
-        this.player = player;
         //static variables
         playerList = new HashMap<>();
         //config
+        boolean configSave = false;
         ConfigHandler listConfig = new ConfigHandler(player.getMain()
                 , Config._playerData.txt
                 , ""
                 , Config._playerListConfig.txt);
-
+        ConfigHandler playerConfig = new ConfigHandler(player.getMain()
+                , Config._playerData.txt
+                , player.getUUID().toString()
+                , Config._playerConfig.txt);
         //add player name to config folder if none exits
         File file;
         file = new File(player.getMain().getDataFolder(),
@@ -58,22 +63,23 @@ public class PlayerConfig {
             try { file.getParentFile().mkdirs(); file.createNewFile(); }
             catch(IOException f) { f.printStackTrace(); }
         }
-
         //PLAYER LIST CONFIG
-        //check player list is created
+        //ADD FEATURE LAST JOINED, CHECK ON LIST LOAD AGAINST CONFIG SET DATE TO DELETE OLD FILES && DELETE IF CONDITIONS MET
+        //initialize
         if(!listConfig.getConfig().isSet(Config._playerList.txt)) {
             listConfig.getConfig().createSection(Config._playerList.txt);
+            configSave = true;
         }
-        //load player list if exists
+        //load player list from config if exists
         if(playerList.isEmpty()
-                && listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0"))
+           && listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0"))
         {
             for(String key : listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
-                    .getKeys(false))
+                                       .getKeys(false))
             {
                 ConfigurationSection configSection =
                         listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
-                                .getConfigurationSection(key);
+                                  .getConfigurationSection(key);
                 assert configSection != null;
                 String name = configSection.getString(Config._playerName.txt);
                 String uuid = configSection.getString(Config._playerUUID.txt);
@@ -81,23 +87,59 @@ public class PlayerConfig {
                 playerList.put(name, uuid);
             }
         }
+        //add player to list if missing
+        if(!playerList.containsValue(player.getUUID().toString()))
+        {
+            String size = Integer.toString(playerList.size());
+            if(!listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0")) {
+                size = "0";
+            }
+            playerList.put(player.getName(), player.getUUID().toString());
+            ConfigurationSection section = listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
+                                                     .createSection(size);
+            section.createSection(Config._playerName.txt);
+            section.set(Config._playerName.txt, player.getName());
+            section.createSection(Config._playerUUID.txt);
+            section.set(Config._playerUUID.txt, player.getUUID().toString());
+            configSave = true;
+        }
+        //check if player name matches value
+        else if(playerList.containsValue(player.getUUID().toString()) && !playerList.containsKey(player.getName()))
+        {
+            for(String key: playerList.keySet())
+            {
+                if(playerList.get(key).equals(player.getUUID().toString()))
+                {
+                    if(!key.equals(player.getName()))
+                    {
+                        playerList.remove(key);
+                        playerList.put(player.getName(), player.getUUID().toString());
+                        configSave = true;
+                    }
+                }
+            }
+        }
+        if(configSave) { listConfig.save();configSave = false; }
         //PLAYER CONFIG
-        ConfigHandler playerConfig = new ConfigHandler(player.getMain()
-                , Config._playerData.txt
-                , player.getUUID().toString()
-                , Config._playerConfig.txt);
         //initialize
         if(!playerConfig.getConfig().isSet(Config._joinDate.txt))
         {
             playerConfig.getConfig().createSection(Config._joinDate.txt);
             playerConfig.getConfig().set(Config._joinDate.txt, getDate("date"));
+            configSave = true;
 
             //first join
-
-            playerConfig.save();
         }
+        if(configSave) { playerConfig.save(); }
+        //load
+        this.joinDate = playerConfig.getConfig().getString(Config._joinDate.txt);
     }
+    
+    
+    //GETTERS
+    public String getJoinDate() { return joinDate; }
 
+    
     //GET DATE
     private String getDate(String type)
     {
@@ -108,50 +150,5 @@ public class PlayerConfig {
         if(type.equals("date")) { send = split[0]; }
         if(type.equals("time")) { send = split[1]; }
         return send;
-    }
-
-    //ADD PLAYER TO LIST
-    public void addPlayerList()
-    {
-        //config
-        ConfigHandler listConfig = new ConfigHandler(player.getMain()
-                , Config._playerData.txt
-                , ""
-                , Config._playerListConfig.txt);
-        //check this player exists in the list
-        boolean save = false;
-        if(!playerList.containsValue(player.getUUID().toString()))
-        {
-            save = true;
-            String size = Integer.toString(playerList.size());
-            if(!listConfig.getConfig().getConfigurationSection(Config._playerList.txt).isSet("0")) {
-                size = "0";
-            }
-            playerList.put(player.getName(), player.getUUID().toString());
-            ConfigurationSection section = listConfig.getConfig().getConfigurationSection(Config._playerList.txt)
-                    .createSection(size);
-            section.createSection(Config._playerName.txt);
-            section.set(Config._playerName.txt, player.getName());
-            section.createSection(Config._playerUUID.txt);
-            section.set(Config._playerUUID.txt, player.getUUID().toString());
-        }
-        //check if player name matches value
-        else if(playerList.containsValue(player.getUUID().toString()) && !playerList.containsKey(player.getName()))
-        {
-            save = true;
-            for(String key: playerList.keySet())
-            {
-                if(playerList.get(key).equals(player.getUUID().toString()))
-                {
-                    if(!key.equals(player.getName()))
-                    {
-                        playerList.remove(key);
-                        playerList.put(player.getName(), player.getUUID().toString());
-                    }
-                }
-            }
-        }
-        //save config
-        if (save) { listConfig.save(); }
     }
 }

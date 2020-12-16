@@ -10,12 +10,12 @@ import java.io.IOException;
 public class ConfigHandler {
 
     //VARIABLES
-    private File file;
-    private FileConfiguration config;
+    private final File file;
+    private final FileConfiguration config;
 
     //CONSTRUCTOR
-    public ConfigHandler(Main main, String folder, String uuid, String yml) {
-
+    public ConfigHandler(Main main, String folder, String uuid, String yml)
+    {
         this.file = new File(main.getDataFolder(),
                 File.separator + folder +
                         File.separator + uuid +
@@ -28,15 +28,16 @@ public class ConfigHandler {
                 file.createNewFile();
             } catch(IOException e){ e.printStackTrace(); }
         }
-        this.config = YamlConfiguration.loadConfiguration(file);
+        this.config = YamlConfiguration.loadConfiguration(this.file);
     }
 
     //GET CONFIG
     public FileConfiguration getConfig() { return this.config; }
 
     //SAVE CONFIG
-    public void save() {
-        try { this.config.save(this.file); }
-        catch (IOException e) { e.printStackTrace(); }
+    public void save()
+    {
+        try { ConfigHandler.this.config.save(ConfigHandler.this.file); }
+        catch(IOException ignored) {}
     }
 }

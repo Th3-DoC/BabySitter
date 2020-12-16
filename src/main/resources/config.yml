@@ -11,10 +11,10 @@ specialPermissions: true
 specialPermsAlways: false
 
 ######################
-#ALLOW ADMIN CREATIVE################################
+#ALLOW ADMIN TO USE CREATIVE#########################
 #THIS CAN BE BYPASSED //babysitter.bypass.creative\\#
 #####################################################
-adminCreative: false
+allowCreative: false
 
 ################################
 #ALLOW ADMIN FLIGHT IN SURVIVAL######################
@@ -42,6 +42,18 @@ allowGive: true
 #################################################
 forceSpectate: true
 
+##########################################################
+#SET THIS TO CONTROL BLOCKS PLACED BY ADMINS, YOU CAN SET#
+#THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
+##########################################################
+safeBlockPlace: true
+
+##########################################################
+#SET THIS TO CONTROL ITEMS DROPPED BY ADMINS, YOU CAN SET#
+#THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
+##########################################################
+safeItemDrops: true
+
 #######################################################
 #SPECIAL RANK NAME(s)##################################
 #PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE#
@@ -56,18 +68,6 @@ specialRanks:
 adminRanks:
   - admin
   - owner
-
-##########################################################
-#SET THIS TO CONTROL BLOCKS PLACED BY ADMINS, YOU CAN SET#
-#THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
-##########################################################
-safeBlockPlace: true
-
-##########################################################
-#SET THIS TO CONTROL ITEMS DROPPED BY ADMINS, YOU CAN SET#
-#THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
-##########################################################
-safeItemDrops: true
 
 #############
 #SAFE BLOCKS#

@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import th3doc.babysitter.Main;
-import th3doc.babysitter.config.Config;
 import th3doc.babysitter.player.data.Chat;
 import th3doc.babysitter.player.data.Perm;
 import th3doc.babysitter.player.data.States;
@@ -15,7 +14,7 @@ import java.util.Arrays;
 public class PlayerCommandPreProcess implements Listener {
 
     //CONSTRUCTOR
-    private Main main;
+    private final Main main;
     public PlayerCommandPreProcess(Main main) { this.main = main; }
 
     @EventHandler
@@ -27,7 +26,7 @@ public class PlayerCommandPreProcess implements Listener {
          *
          */
         //TELEPORT COMMAND CHECK
-        if ((e.getMessage().toLowerCase().contains("teleport") || e.getMessage().toLowerCase().contains("tp"))
+        if ((e.getMessage().toLowerCase().startsWith("/teleport") || e.getMessage().toLowerCase().startsWith("/tp"))
                 && !e.getPlayer().hasPermission(Perm._tpBypass.txt))
         {
             String[] message = e.getMessage().split(" ");
@@ -50,8 +49,8 @@ public class PlayerCommandPreProcess implements Listener {
          *
          */
         //CREATIVE CANCEL
-        if (e.getMessage().toLowerCase().contains("creative")
-                && !main.getConfig().getBoolean(Config._allowCreative.txt)
+        if (e.getMessage().toLowerCase().startsWith("/creative")
+                && !main.defaultConfig().canAdminUseCreative()
                 && !e.getPlayer().hasPermission(Perm._creativeBypass.txt))
         {
             e.getPlayer().sendMessage(Chat._creativeDisabled.txt);
@@ -63,13 +62,13 @@ public class PlayerCommandPreProcess implements Listener {
          *
          */
         //GIVE CANCEL
-        if (e.getMessage().contains("give")
-                && (!main.getConfig().getBoolean(Config._allowGive.txt)
-                    || !main.getConfig().getBoolean(Config._adminGive.txt))
+        if (e.getMessage().toLowerCase().startsWith("/give")
+                && (!main.defaultConfig().canAdminGive()
+                    || !main.defaultConfig().canAdminGiveToAdmin())
                 && !e.getPlayer().hasPermission(Perm._giveBypass.txt))
         {
-            boolean allowGive = main.getConfig().getBoolean(Config._allowGive.txt);
-            boolean adminGive = main.getConfig().getBoolean(Config._adminGive.txt);
+            boolean allowGive = main.defaultConfig().canAdminGive();
+            boolean adminGive = main.defaultConfig().canAdminGiveToAdmin();
             //CASE ALLOW GIVE
             if (!allowGive)
             {
@@ -86,8 +85,8 @@ public class PlayerCommandPreProcess implements Listener {
                 }
                 //CHECK SECOND ARGUMENT FOR PLAYER NAME
                 if (Arrays.toString(main.getServer().getOnlinePlayers().toArray()).contains(args[1])
-                        && main.player().isAdmin(args[1])
-                        && !main.player().admin().getState(args[1], States.Babysit))
+                        && main.getPlayer(main.getServer().getPlayer(args[1]).getUniqueId()).isAdmin()
+                        && !main.getPlayer(main.getServer().getPlayer(args[1]).getUniqueId()).admin().getConfig().getState(States.ADMIN))
                 {
                     e.getPlayer().sendMessage(Chat._adminInSurvival.txt);
                     e.setCancelled(true);

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class GiveCommand implements CommandExecutor, TabCompleter {
 
-    private Main main;
+    private final Main main;
     public GiveCommand(Main main) { this.main = main; }
 
     @Override
@@ -33,7 +33,7 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
         {
             if (args.length <= 1
                     || (args.length >= 4 && !args[1].contains(Material.ENCHANTED_BOOK.name()))
-                    || (!(main.getServer().getPlayer(args[0]) instanceof Player))
+                    || (main.getServer().getPlayer(args[0]) == null)
                     || Material.getMaterial(args[1]) == null)
             {
                 p.sendMessage(Chat._invalidGive.txt);
@@ -48,8 +48,9 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
                 }
                 if (args.length >= 4 || args[1].contains(Material.ENCHANTED_BOOK.name()))
                 {
-                    if (args.length > 4) { p.sendMessage(Chat._invalidGive.txt); return false; }
-                    else { p.sendMessage("Enchanted Books Coming !"); return false; }
+                    if (args.length > 4) { p.sendMessage(Chat._invalidGive.txt); }
+                    else { p.sendMessage("Enchanted Books Coming !"); }
+                    return false;
                 }
                 Material material = Material.getMaterial(args[1]);
                 ItemStack item = new ItemStack(material, amount);

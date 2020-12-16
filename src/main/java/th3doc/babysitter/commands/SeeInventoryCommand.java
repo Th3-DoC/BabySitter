@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;
+import th3doc.babysitter.config.ConfigHandler;
+import th3doc.babysitter.player.PlayerConfig;
 import th3doc.babysitter.player.data.PlayerType;
 import th3doc.babysitter.player.gui.InvGUI;
 import th3doc.babysitter.player.data.Chat;
@@ -23,10 +25,10 @@ import java.util.List;
 public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
 
     //CONSTRUCTOR
-    private Main main;
+    private final Main main;
     public SeeInventoryCommand(Main main) { this.main = main; }
-    private List<String> inventoryTypes = Arrays.asList(InvType.Inventory.name(), InvType.EnderChest.name());
-    private List<String> playerType = Arrays.asList(PlayerType.Online.name(), PlayerType.Offline.name());
+    private final List<String> inventoryTypes = Arrays.asList(InvType.Inventory.name(), InvType.EnderChest.name());
+    private final List<String> playerType = Arrays.asList(PlayerType.Online.name(), PlayerType.Offline.name());
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -43,12 +45,18 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
         {
             //CHECK PLAYER IS VALID
             //CHECK ARGUMENT LENGTH IS VALID /SEE <PLAYER> <INVENTORY TYPE> <EDIT>
-            String offlineUUID = main.player().list().get(args[1]);
+            String offlineUUID;
+            ConfigHandler config;
+            if(args[0].equals(PlayerType.Offline.name()))
+            {
+                offlineUUID = PlayerConfig.playerList.get(args[1]);
+                config = new ConfigHandler(main, Config._playerData.txt, offlineUUID, Config._invConfig.txt);
+                if(offlineUUID == null
+                   || !config.getConfig().isSet(Config._survivalInv.txt)) { p.sendMessage(Chat._invalidViewerCommand.txt); }
+            }
             if (args.length < 3
                     || args.length > 4
-                    || (!(main.getServer().getPlayer(args[1]) instanceof Player) && args[0].equals(PlayerType.Online.name()))
-                    || (args[0].equals(PlayerType.Offline.name()) && !main.player().inventory()
-                            .config(offlineUUID).getConfig().isSet(Config._survivalInv.txt))
+                    || (main.getServer().getPlayer(args[1]) == null && args[0].equals(PlayerType.Online.name()))
                     || (args[1].contains(p.getName()) && !p.hasPermission(Perm._seeBypass.txt))
                     || !inventoryTypes.contains(args[2])
                     || !playerType.contains(args[0]))
@@ -94,7 +102,7 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
                 if(args[0].equals(PlayerType.Offline.name()))
                 {
                     players.clear();
-                    players.addAll(main.player().list().keySet());
+                    players.addAll(PlayerConfig.playerList.keySet());
                     for(Player player : main.getServer().getOnlinePlayers())
                     {
                         players.remove(player.getName());

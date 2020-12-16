@@ -13,7 +13,7 @@ import th3doc.babysitter.player.data.States;
 public class FlyCommand implements CommandExecutor {
 
     //CONSTRUCTOR
-    private Main main;
+    private final Main main;
     public FlyCommand(Main main) { this.main = main; }
 
     @Override
@@ -32,14 +32,17 @@ public class FlyCommand implements CommandExecutor {
             {
                 p.setAllowFlight(true);
                 p.setFlying(true);
-                main.player().admin().setState(p, true, States.Fly);
+                main.getPlayer(p.getUniqueId()).admin().getConfig().setState(true, States.FLY);
                 p.sendMessage(Chat._flyOn.txt);
-                return false;
             }
-            p.setFlying(false);
-            p.setAllowFlight(false);
-            main.player().admin().setState(p, false, States.Fly);
-            p.sendMessage(Chat._flyOff.txt);
+            else
+            {
+                p.setFlying(false);
+                p.setAllowFlight(false);
+                main.getPlayer(p.getUniqueId()).admin().getConfig().setState(false, States.FLY);
+                p.sendMessage(Chat._flyOff.txt);
+            }
+            main.getPlayer(p.getUniqueId()).save();
         }
         return false;
     }

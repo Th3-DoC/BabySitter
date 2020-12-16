@@ -6,8 +6,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;
+import th3doc.babysitter.config.ConfigHandler;
+import th3doc.babysitter.player.PlayerConfig;
 import th3doc.babysitter.player.data.InvType;
 import th3doc.babysitter.player.data.PlayerType;
 
@@ -30,38 +33,53 @@ public class InvGUI {
         }
         if (edit)
         {
-            main.player().inventory().setEditingInv(viewer, guiName);
+            viewer.sendMessage("inv gui edit true");
+            main.getPlayer(viewer.getUniqueId()).inventory().setEditingInv(guiName);
         }
-        ItemStack[] inventory = new ItemStack[0];
-        ItemStack[] eChest = new ItemStack[0];
+        final ItemStack[][] inventory = new ItemStack[1][1];
+        final ItemStack[][] eChest = new ItemStack[1][1];
         if(state.equals(PlayerType.Online.name()))
         {
-            inventory = main.getServer().getPlayer(viewee).getInventory().getContents();
-            eChest = main.getServer().getPlayer(viewee).getEnderChest().getContents();
+            inventory[0] = main.getServer().getPlayer(viewee).getInventory().getContents();
+            eChest[0] = main.getServer().getPlayer(viewee).getEnderChest().getContents();
         }
-        if(state.equals(PlayerType.Offline.name()))
+        else if(state.equals(PlayerType.Offline.name()))
         {
-            String offlineUUID = main.player().list().get(viewee);
-            try
+            String offlineUUID = PlayerConfig.playerList.get(viewee);
+            new BukkitRunnable()
             {
-                inventory = ((List<String>) main.player().inventory().config(offlineUUID).getConfig()
-                        .getConfigurationSection(Config._survivalInv.txt)
-                        .get(Config._inv.txt)).toArray(new ItemStack[0]);
-                
-                eChest = ((List<String>) main.player().inventory().config(offlineUUID).getConfig()
-                        .getConfigurationSection(Config._survivalInv.txt)
-                        .get(Config._eChest.txt)).toArray(new ItemStack[0]);
-            }
-            catch(ClassCastException ignored) {}
+    
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        ConfigHandler config = new ConfigHandler(main,
+                                                                 Config._playerData.txt,
+                                                                 offlineUUID,
+                                                                 Config._invConfig.txt);
+                        inventory[0] = ((List<String>) config.getConfig()
+                                                             .getConfigurationSection(Config._survivalInv.txt)
+                                                             .get(Config._inv.txt)).toArray(new ItemStack[0]);
+    
+                        eChest[0] = ((List<String>) config.getConfig()
+                                                          .getConfigurationSection(Config._survivalInv.txt)
+                                                          .get(Config._eChest.txt)).toArray(new ItemStack[0]);
+                    }
+                    catch(ClassCastException ignored) {}
+                }
+            
+            }.runTaskAsynchronously(main);
         }
+        else { return; }
         if (inv.equals(InvType.EnderChest.name())) {
             Inventory gui = Bukkit.createInventory(null, size, guiName);
-            gui.setContents(eChest);
+            gui.setContents(eChest[0]);
             viewer.openInventory(gui);
         }
-        if (inv.equals(InvType.Inventory.name())) {
+        else if (inv.equals(InvType.Inventory.name())) {
             Inventory gui = Bukkit.createInventory(null, size, guiName);
-            gui.setContents(inventory);
+            gui.setContents(inventory[0]);
             ItemStack info = new ItemStack(Material.ENDER_EYE, 1);
             ItemMeta info_meta = info.getItemMeta();
             List<String> infolore = new ArrayList<>();

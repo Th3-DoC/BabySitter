@@ -1,69 +1,60 @@
 package th3doc.babysitter.player.location;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Player;
-import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;
 import th3doc.babysitter.config.ConfigHandler;
-
-import java.util.HashMap;
+import th3doc.babysitter.player.PlayerHandler;
 
 public class PlayerLocation {
+    
+    //VARIABLES
+    private final PlayerHandler player;
+    private Location survivalLastKnown;
 
+    
     //CONSTRUCTOR
-    private Main main;
-    public PlayerLocation(Main main) { this.main = main; }
-
-    //LOCATION DATA
-    HashMap<String, Location> survivalLastKnown = new HashMap<>();
-    public Location getSurvivalLastKnown(Player p) { return survivalLastKnown.get(p.getName()); }
-    public void setSurvivalLastKnown(Player p, Location loc)
+    public PlayerLocation(PlayerHandler player)
     {
-        ConfigHandler config =
-                new ConfigHandler(main, Config._playerData.txt, p.getUniqueId().toString(), Config._playerConfig.txt);
-        survivalLastKnown.put(p.getName(), loc);
-        config.getConfig().set(Config._survivalLocation.txt, loc);
-        config.save();
-    }
-
-    //INITIALIZE
-    public void initialize(Player p)
-    {
-        /**
-         *
-         * LOAD/CREATE CONFIG
-         *
-         */
-        //LOAD PLAYER CONFIG
-        ConfigHandler config = new ConfigHandler(main
-                , Config._playerData.txt
-                , p.getUniqueId().toString()
-                , Config._playerConfig.txt);
-
+        this.player = player;
         //CHECK CONFIG VALUES, CREATE IF EMPTY
+        ConfigHandler config = new ConfigHandler(player.getMain()
+                , Config._playerData.txt
+                , player.getUUID().toString()
+                , Config._playerConfig.txt);
         //SURVIVAL LOCATION
         if (!config.getConfig().isSet(Config._survivalLocation.txt))
         {
             config.getConfig().createSection(Config._survivalLocation.txt);
-            config.getConfig().set(Config._survivalLocation.txt, p.getLocation());
+            config.getConfig().set(Config._survivalLocation.txt, player.getPlayer().getLocation());
+            //SAVE CONFIG
+            config.save();
         }
-        //SAVE CONFIG
-        config.save();
-        /**
-         * END LOAD/CREATE CONFIG
-         */
-        /**
-         *
-         * LOAD CONFIG DATA
-         *
-         */
-        //SURVIVAL LOCATION
-        survivalLastKnown.put(p.getName()
-                , config.getConfig().getLocation(Config._survivalLocation.txt));
-        /**
-         * END LOAD CONFIG DATA
-         */
+        survivalLastKnown = config.getConfig().getLocation(Config._survivalLocation.txt);
     }
 
-    public void memoryDump(Player p) { survivalLastKnown.remove(p.getName()); }
+    
+    //GETTERS
+    public Location getSurvivalLastKnown() { return survivalLastKnown; }
+    
+    
+    //SETTERS
+    public void setSurvivalLastKnown(Location loc)
+    {
+        survivalLastKnown = loc;
+    }
+    
+    
+    //SAVE
+    public void save()
+    {
+        //config
+        ConfigHandler config = new ConfigHandler(player.getMain()
+                , Config._playerData.txt
+                , player.getUUID().toString()
+                , Config._playerConfig.txt);
+        //set files to save
+        config.getConfig().set(Config._survivalLocation.txt, survivalLastKnown);
+        //save config
+        config.save();
+    }
 }

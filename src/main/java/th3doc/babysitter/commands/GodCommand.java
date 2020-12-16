@@ -26,10 +26,12 @@ public class GodCommand implements CommandExecutor {
             {
                 p.setInvulnerable(false);
                 p.sendMessage(Chat._godOff.txt);
-                return false;
             }
-            p.setInvulnerable(true);
-            p.sendMessage(Chat._godOn.txt);
+            else
+            {
+                p.setInvulnerable(true);
+                p.sendMessage(Chat._godOn.txt);
+            }
         }
         return false;
     }
