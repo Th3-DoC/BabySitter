@@ -8,6 +8,7 @@ public enum Perm {
     _flyCommand("babysitter.command.fly"),
     _giveCommand("babysitter.command.give"),
     _invSeeCommand("babysitter.command.see"),
+    _spawnCommand("babysitter.command.spawn"),
     _invEdit("babysitter.command.edit"),
     _forceSpectator("babysitter.bypass.spec"),
     _blockPlaceBypass("babysitter.bypass.blocks"),

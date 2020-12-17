@@ -11,11 +11,10 @@ import th3doc.babysitter.Main;
 import th3doc.babysitter.config.Config;
 import th3doc.babysitter.config.ConfigHandler;
 import th3doc.babysitter.player.PlayerConfig;
-import th3doc.babysitter.player.data.PlayerType;
-import th3doc.babysitter.player.gui.InvGUI;
 import th3doc.babysitter.player.data.Chat;
 import th3doc.babysitter.player.data.InvType;
 import th3doc.babysitter.player.data.Perm;
+import th3doc.babysitter.player.data.PlayerType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,7 +51,7 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
                 offlineUUID = PlayerConfig.playerList.get(args[1]);
                 config = new ConfigHandler(main, Config._playerData.txt, offlineUUID, Config._invConfig.txt);
                 if(offlineUUID == null
-                   || !config.getConfig().isSet(Config._survivalInv.txt)) { p.sendMessage(Chat._invalidViewerCommand.txt); }
+                   || !config.getConfig().isSet(Config._survivalInv.txt)) { p.sendMessage(Chat._invalidViewerCommand.txt); return false; }
             }
             if (args.length < 3
                     || args.length > 4
@@ -64,7 +63,6 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
                 p.sendMessage(Chat._invalidViewerCommand.txt);
                 return false;
             }
-            String inv = args[2];
             //CHECK FOURTH ARGUMENT EXISTS
             boolean edit = false;
             if (args.length == 4)
@@ -74,7 +72,7 @@ public class SeeInventoryCommand implements CommandExecutor, TabCompleter {
                         &&  p.hasPermission(Perm._invEdit.txt)) { edit = true; }
                 else { p.sendMessage(Chat._invalidViewerCommand.txt); return false; }
             }
-            new InvGUI(main, p, args[0], inv, args[1], edit);
+            main.getPlayer(p.getUniqueId()).admin().gui().openInv(args[1], args[0], args[2], edit);
         }
         return false;
     }

@@ -2,6 +2,7 @@ package th3doc.babysitter.player;
 
 import org.bukkit.ChatColor;
 import org.bukkit.World;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import th3doc.babysitter.Main;
@@ -72,6 +73,10 @@ public class PlayerHandler {
     public boolean isAdmin() { return AdminConfig.adminList.contains(name); }
 
     
+    //SEND MESSAGE
+    public void message(String message) { p.sendMessage(message); }
+    
+    
     //GET PLAYER PERMISSION HANDLER GROUP
     public boolean checkPermGroup(PlayerType type, String rank) {
         List<String> playerGroups = new ArrayList<>(Arrays.asList(main.getPerms().getPlayerGroups(p)));
@@ -140,6 +145,7 @@ public class PlayerHandler {
                 inventories.getConfig().save();
                 adminPlayer.getConfig().save();
                 locations.save();
+                config.save();
             }
         }.runTaskAsynchronously(main);
     }

@@ -24,37 +24,57 @@ public class GiveCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        //CONSOLE USER
+        final String sentMat = args[1].toUpperCase();
         if (!(sender instanceof Player)) {
-            return false;
+            final Material material = Material.getMaterial(sentMat);
+            final Player player = main.getServer().getPlayer(args[0]);
+            int amount = 1;
+            if(args.length == 3)
+            {
+                try { amount = Integer.parseInt(args[2]); }
+                catch(NumberFormatException e) { main.getServer().getLogger().info(Chat._invalidGive.txt); }
+            }
+            if(material != null && player != null)
+            {
+                final ItemStack item = new ItemStack(material, amount);
+                player.getInventory().addItem(item);
+            }
+            else { main.getServer().getLogger().info(Chat._invalidGive.txt); return false; }
         }
-        Player p = (Player) sender;
-
-        if (p.hasPermission(Perm._giveCommand.txt))
+        else
         {
-            if (args.length <= 1
-                    || (args.length >= 4 && !args[1].contains(Material.ENCHANTED_BOOK.name()))
-                    || (main.getServer().getPlayer(args[0]) == null)
-                    || Material.getMaterial(args[1]) == null)
+            //PLAYER USER
+            Player p = (Player) sender;
+    
+            if(p.hasPermission(Perm._giveCommand.txt))
             {
-                p.sendMessage(Chat._invalidGive.txt);
-                return false;
-            } else
-            {
-                int amount = 1;
-                if (args.length == 3 && !args[1].contains(Material.ENCHANTED_BOOK.name()))
+                if(args.length <= 1
+                   || (args.length >= 4 && !args[1].contains(Material.ENCHANTED_BOOK.name()))
+                   || (main.getServer().getPlayer(args[0]) == null)
+                   || Material.getMaterial(args[1]) == null)
                 {
-                    try { amount = Integer.parseInt(args[2]); }
-                    catch (NumberFormatException e) { p.sendMessage(Chat._invalidGive.txt); }
-                }
-                if (args.length >= 4 || args[1].contains(Material.ENCHANTED_BOOK.name()))
-                {
-                    if (args.length > 4) { p.sendMessage(Chat._invalidGive.txt); }
-                    else { p.sendMessage("Enchanted Books Coming !"); }
+                    p.sendMessage(Chat._invalidGive.txt);
                     return false;
                 }
-                Material material = Material.getMaterial(args[1]);
-                ItemStack item = new ItemStack(material, amount);
-                main.getServer().getPlayer(args[0]).getInventory().addItem(item);
+                else
+                {
+                    int amount = 1;
+                    if(args.length == 3 && !args[1].contains(Material.ENCHANTED_BOOK.name()))
+                    {
+                        try { amount = Integer.parseInt(args[2]); }
+                        catch(NumberFormatException e) { p.sendMessage(Chat._invalidGive.txt); }
+                    }
+                    if(args.length >= 4 || args[1].contains(Material.ENCHANTED_BOOK.name()))
+                    {
+                        if(args.length > 4) { p.sendMessage(Chat._invalidGive.txt); }
+                        else { p.sendMessage("Enchanted Books Coming !"); }
+                        return false;
+                    }
+                    Material material = Material.getMaterial(sentMat);
+                    ItemStack item = new ItemStack(material, amount);
+                    main.getServer().getPlayer(args[0]).getInventory().addItem(item);
+                }
             }
         }
         return false;

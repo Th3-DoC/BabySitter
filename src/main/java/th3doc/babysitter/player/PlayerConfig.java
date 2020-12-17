@@ -18,7 +18,10 @@ public class PlayerConfig {
 
     //VARIABLES
     public static HashMap<String, String> playerList;//name/uuid
+    final private PlayerHandler player;
     private final String joinDate;
+    final private String joinTime;
+    private String playTime;
     
     
     //CONSTRUCTOR
@@ -27,6 +30,7 @@ public class PlayerConfig {
         //player
         //static variables
         playerList = new HashMap<>();
+        this.player = player;
         //config
         boolean configSave = false;
         ConfigHandler listConfig = new ConfigHandler(player.getMain()
@@ -119,28 +123,46 @@ public class PlayerConfig {
                 }
             }
         }
-        if(configSave) { listConfig.save();configSave = false; }
+        if(configSave) { listConfig.save(); }
         //PLAYER CONFIG
         //initialize
         if(!playerConfig.getConfig().isSet(Config._joinDate.txt))
         {
             playerConfig.getConfig().createSection(Config._joinDate.txt);
             playerConfig.getConfig().set(Config._joinDate.txt, getDate("date"));
-            configSave = true;
 
-            //first join
+            //first join implemented below here !!!!!
         }
-        if(configSave) { playerConfig.save(); }
+        if(!playerConfig.getConfig().isSet(Config._lastJoined.txt))
+        {
+            playerConfig.getConfig().createSection(Config._lastJoined.txt + "." + Config._date.txt);
+            playerConfig.getConfig().createSection(Config._lastJoined.txt + "." + Config._time.txt);
+        }
+        playerConfig.getConfig().set(Config._lastJoined.txt + "." + Config._date.txt, getDate("date"));
+        playerConfig.getConfig().set(Config._lastJoined.txt + "." + Config._time.txt, getDate("time"));
+        if(playerConfig.getConfig().isSet(Config._lastJoined.txt))
+        {
+            playerConfig.getConfig().set(Config._lastJoined.txt + "." + Config._date.txt, getDate("date"));
+            playerConfig.getConfig().set(Config._lastJoined.txt + "." + Config._time.txt, getDate("time"));
+        }
+        if(!playerConfig.getConfig().isSet(Config._playTime.txt))
+        {
+            playerConfig.getConfig().createSection(Config._playTime.txt);
+            playerConfig.getConfig().set(Config._playTime.txt, "0:0:0:0");
+        }
+        //config save
+        playerConfig.save();
         //load
         this.joinDate = playerConfig.getConfig().getString(Config._joinDate.txt);
+        this.joinTime = playerConfig.getConfig().getString(Config._lastJoined.txt + "." + Config._time.txt);
+        this.playTime = playerConfig.getConfig().getString(Config._playTime.txt);
     }
     
     
     //GETTERS
-    public String getJoinDate() { return joinDate; }
-
-    
-    //GET DATE
+    public String getFirstJoinDate() { return joinDate; }
+    public String getJoinTime() { return joinTime; }
+    public String getPlayTime() { return this.playTime; }
     private String getDate(String type)
     {
         Date now = new Date();
@@ -150,5 +172,54 @@ public class PlayerConfig {
         if(type.equals("date")) { send = split[0]; }
         if(type.equals("time")) { send = split[1]; }
         return send;
+    }
+    
+    
+    //SETTERS
+    public void setPlayTime()
+    {
+        final int[] currentTime = parseInt(getDate("time"), ":");
+        final int[] joinTime = parseInt(this.joinTime, ":");
+        final int[] playTime = parseInt(this.playTime, ":");
+        this.playTime = checkPlayTimeFormat(currentTime, joinTime, playTime);
+    }
+    private int[] parseInt(String str, String regex)
+    {
+        String[] strArray = str.split(regex);
+        int[] ints = new int[strArray.length];
+        for(int i=0; i<strArray.length; i++)
+        {
+            ints[i] = Integer.parseInt(strArray[i]);
+        }
+        return ints;
+    }
+    private String checkPlayTimeFormat(int[] current, int[] join, int[] play)
+    {
+        int day = ((current[0] - join[0]) / 24) + play[0];
+        int hr = ((current[0] - join[0]) % 24) + play[1];
+        int min = (current[1] - join[1]) + play[2];
+        int sec = (current[2] - join[2]) + play[3];
+        final String s = Integer.toString(sec % 60);
+        min += sec / 60;
+        final String m = Integer.toString(min % 60);
+        hr += min / 60;
+        final String h = Integer.toString((hr) % 24);
+        day += hr / 24;
+        final String d = Integer.toString(day);
+        
+        return d + ":" + h + ":" + m + ":" + s;
+    }
+    
+    
+    //SAVE
+    public void save()
+    {
+        ConfigHandler config = new ConfigHandler(player.getMain(),
+                                                 Config._playerData.txt,
+                                                 player.getUUID().toString(),
+                                                 Config._playerConfig.txt);
+        setPlayTime();
+        config.getConfig().set(Config._playTime.txt, this.playTime);
+        config.save();
     }
 }

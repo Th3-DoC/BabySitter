@@ -24,14 +24,12 @@ public class PlayerQuit implements Listener {
             public void run()
             {
                 main.getPlayer(p.getUniqueId()).memoryDump();
-                main.getLogger().info("Ran Mem Dump");
                 new BukkitRunnable()
                 {
                     @Override
                     public void run()
                     {
                         main.removePlayer(p.getUniqueId());
-                        main.getLogger().info("Player Removed");
                     }
                 }.runTaskLaterAsynchronously(main, 20L);
             }

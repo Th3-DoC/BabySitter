@@ -26,8 +26,11 @@ commands:
     description: Travel Back To Your Survival Location.
     permission: babysitter.bypass.tp
   give:
-    description: Give Players Minecraft Items
+    description: Give Players Minecraft Items.
     permission: babysitter.command.give
+  spawn:
+    description: Spawn Minecraft Entities.
+    permission: babysitter.command.spawn
 
 permissions:
   babysit.*:
@@ -55,6 +58,9 @@ permissions:
             default: op
           babysitter.command.edit:
             description: Allows The Editing of Players.
+            default: op
+          babysitter.command.spawn:
+            description: Allows Spawning Functionality.
             default: op
           babysitter.command.give:
             description: Allows Give Function Without Selector Capabilities.

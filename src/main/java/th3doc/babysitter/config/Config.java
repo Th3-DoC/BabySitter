@@ -19,6 +19,7 @@ public enum Config {
     /**
      * DEFAULT CONFIG
      */
+    _allowEndermanGrief("endermanGriefing"),
     _allowCreative("allowCreative"),
     _allowGive("allowGive"),
     _adminGive("adminGive"),
@@ -62,6 +63,10 @@ public enum Config {
      * PLAYER CONFIG
      */
     _playerList("playerList"),
+    _lastJoined("lastJoined"),
+    _date("date"),
+    _time("time"),
+    _playTime("playTime"),
     _playerName("name"),
     _playerUUID("UUID"),
     _joinDate("joinDate"),

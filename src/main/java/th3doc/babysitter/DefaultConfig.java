@@ -12,6 +12,7 @@ import java.util.List;
 public class DefaultConfig {
     
     //VARIABLES
+    private final boolean endermanGriefing;
     private final boolean specialPermissions;
     private final boolean specialPermsAlways;
     private final boolean allowCreative;
@@ -51,6 +52,7 @@ public class DefaultConfig {
         this.adminPermissionList = new HashMap<>();
         
         //load config values
+        this.endermanGriefing = main.getConfig().getBoolean(Config._allowEndermanGrief.txt);
         this.specialPermissions = main.getConfig().getBoolean(Config._specialPermissions.txt);
         this.specialPermsAlways = main.getConfig().getBoolean(Config._specialPermsAlways.txt);
         this.allowCreative = main.getConfig().getBoolean(Config._allowCreative.txt);
@@ -95,6 +97,7 @@ public class DefaultConfig {
     
     
     //GETTERS
+    public boolean isEndermanGriefingAllowed() { return this.endermanGriefing; }
     public boolean isSpecialPermissionsActive() { return this.specialPermissions; }
     public boolean isSpecialPermsAlwaysActive() { return this.specialPermsAlways; }
     public boolean canAdminUseCreative() { return this.allowCreative; }

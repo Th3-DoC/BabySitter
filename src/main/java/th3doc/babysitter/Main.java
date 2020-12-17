@@ -96,6 +96,7 @@ public final class Main extends JavaPlugin {
         this.getCommand("see").setExecutor(new SeeInventoryCommand(this));
         this.getCommand("give").setExecutor(new GiveCommand(this));
         this.getCommand("back").setExecutor(new BackCommand(this));
+        this.getCommand("spawn").setExecutor(new SpawnVillager(this));
     }
 
     
@@ -111,6 +112,8 @@ public final class Main extends JavaPlugin {
         manger.registerEvents(new BlockPlace(this), this);
         manger.registerEvents(new PlayerDropItem(this), this);
         manger.registerEvents(new InventoryOpen(this), this);
+        manger.registerEvents(new InventoryClick(this), this);
+        manger.registerEvents(new EntityBlockChange(this), this);
     }
 
     

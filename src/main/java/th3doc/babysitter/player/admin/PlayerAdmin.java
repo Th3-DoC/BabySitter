@@ -22,6 +22,7 @@ public class PlayerAdmin {
     //VARIABLES
     private final PlayerHandler player;
     private final AdminConfig config;
+    final private GUI gui;
     
     
     //CONSTRUCTOR
@@ -32,6 +33,7 @@ public class PlayerAdmin {
         //ADD TO ADMIN LIST
         this.config = new AdminConfig(player);
         AdminConfig.adminList.add(player.getName());
+        this.gui = new GUI(player);
 
         //CHECK IF SPECIAL PERMISSIONS IS TRUE ALWAYS
         if (player.getMain().defaultConfig().isSpecialPermsAlwaysActive()) { setPermissions(true, PlayerType.Special); }
@@ -56,6 +58,7 @@ public class PlayerAdmin {
     
     //GETTERS
     public AdminConfig getConfig() { return this.config; }
+    public GUI gui() { return this.gui; }
 
     //PERMISSIONS
     public void setPermissions(boolean boo, PlayerType type)
@@ -129,7 +132,7 @@ public class PlayerAdmin {
                     playerTabInfo(false);
                 }
             }.runTaskLater(player.getMain(), 1L);
-            if (config.getState(States.VANISH)) { player.getPlayer().sendMessage(Chat._vanishOn.txt); return; }
+            if (config.getState(States.VANISH)) { player.message(Chat._vanishOn.txt); return; }
             config.setState(true, States.VANISH);
             player.getMain().getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + Chat._fakeLogOut.txt);
         } else
