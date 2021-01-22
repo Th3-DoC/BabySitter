@@ -1,85 +1,97 @@
+###########################################################
+#HOW OFTEN SHOULD WE SAVE THE CONFIG FILES IN MINUTES?    #
+#WE ALSO HANDLE SERVER CRASHES/RESTARTS/RELOADS NO WORRIES#
+###########################################################
+config-save-intervals: 10
+
+########################
+#ALLOW ONE PERSON SLEEP#
+########################
+is-sleeping-ignored: true
+
 #########################
 #ALLOW ENDERMAN GRIEFING#
 #########################
-endermanGriefing: false
+enderman-griefing: false
 
-##############################################
+#########################################################
 #ALLOW SPECIAL PERMISSIONS TO SPECIFIED RANKS############
 #SET THESE PERMISSIONS BELOW, IN THE PERMISSIONS SECTION#
 #########################################################
-specialPermissions: true
+special-permissions: true
 
 ########################################################
 #SET SPECIAL PERMISSIONS FOR ACCESS OUT SIDE ADMIN MODE#
 #THIS CAN BE BYPASSED //babysitter.bypass.special\\#####
 ########################################################
-specialPermsAlways: false
+special-permissions-always: false
 
-######################
+#####################################################
 #ALLOW ADMIN TO USE CREATIVE#########################
 #THIS CAN BE BYPASSED //babysitter.bypass.creative\\#
 #####################################################
-allowCreative: false
+allow-creative: true
 
-################################
-#ALLOW ADMIN FLIGHT IN SURVIVAL######################
+###################################################
+#ALLOW ADMIN FLIGHT IN SURVIVAL####################
 #THIS CAN BE BYPASSED //babysitter.bypass.flight\\#
-#####################################################
-adminFlight: false
+###################################################
+admin-survial-flight: false
 
-###########################################
-#CAN AN ADMIN /GIVE TO ADMINS IN SURVIVAL?#
+#################################################
+#CAN AN ADMIN /GIVE TO ADMINS IN SURVIVAL?#######
 #REQUIRES GIVE PERMISSION IS SET TO TRUE#########
 #THIS CAN BE BYPASSED //babysitter.bypass.give\\#
 #################################################
-adminGive: false
+admin-to-admin-give: false
 
-######################
-#DISABLE GIVE COMMAND####################
+#################################################
+#DISABLE GIVE COMMAND############################
 #REQUIRES GIVE PERMISSION IS SET TO TRUE#########
 #THIS CAN BE BYPASSED //babysitter.bypass.give\\#
 #################################################
-allowGive: true
+allow-give: true
 
-####################################
+#################################################
 #FORCE ADMIN TO PLAYER IN SPECTATOR##############
 #THIS CAN BE BYPASSED //babysitter.bypass.spec\\#
 #################################################
-forceSpectate: true
+force-spectate: false
 
 ##########################################################
 #SET THIS TO CONTROL BLOCKS PLACED BY ADMINS, YOU CAN SET#
 #THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
 ##########################################################
-safeBlockPlace: true
+safe-blocks-to-place: true
 
 ##########################################################
 #SET THIS TO CONTROL ITEMS DROPPED BY ADMINS, YOU CAN SET#
 #THESE ITEMS BELOW, REFER TO THE WIKI FOR A FULL LIST#####
 ##########################################################
-safeItemDrops: true
+safe-items-to-drop: true
 
 #######################################################
 #SPECIAL RANK NAME(s)##################################
 #PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE#
 #######################################################
-specialRanks:
+special-ranks:
   - owner
 
-####################
+#######################################################
 #ADMIN RANK NAME(s)####################################
 #PLEASE NOTE LUCKPERMS REQUIRES IT TO BE ALL LOWERCASE#
 #######################################################
-adminRanks:
+admin-ranks:
   - admin
   - owner
 
 #############
 #SAFE BLOCKS#
 #############
-safeBlocks:
+safe-blocks:
   - CRAFTING_TABLE
   - FURNACE
+  - ANVIL
   - DIRT
   - SAND
   - COBBLESTONE
@@ -127,7 +139,8 @@ safeBlocks:
   - BROWN_BED
   - GREEN_BED
   - RED_BED
-#####################
+
+###################################################
 #PERMISSIONS SECTION###############################
 #YOU MAY ADD ANY PERMISSION, FROM ANY PLUGIN HERE!#
 #JUST MAKE SURE TO ONLY USE SPACES, NOT TAB, AND###
@@ -139,13 +152,13 @@ safeBlocks:
 #     <value>: true/false                         #
 ###################################################
 
-#########################
-#SPECIAL PERMISSION LIST#####################
+#########################################################
+#SPECIAL PERMISSION LIST#################################
 #THESE WILL EVALUATE AFTER ADMIN PERMISSIONS#############
 #ALLOWING THEM TO OVERWRITE DATA FROM ADMIN PERMISSIONS##
 #THIS CAN BE BYPASSED //babysitter.bypass.specialperms\\#
 #########################################################
-specialPermissionList:
+special-permissions-list:
   1:
     permission: minecraft.command.setblock
     value: true
@@ -157,52 +170,25 @@ specialPermissionList:
     value: true
 
 #ADMIN PERMISSION LIST#
-adminPermissionList:
+admin-permissions-list:
   1:
-    permission: babysitter.command.back
-    value: false
-  2:
-    permission: babysitter.command.vanish
-    value: true
-  3:
     permission: babysitter.command.see
     value: true
-  4:
+  2:
     permission: babysitter.command.edit
     value: true
-  5:
-    permission: babysitter.command.god
-    value: true
-  6:
-    permission: babysitter.command.fly
-    value: true
-  7:
+  3:
     permission: minecraft.command.teleport
     value: true
-  8:
+  4:
     permission: babysitter.command.give
     value: true
-  9:
+  5:
     permission: minecraft.command.gamemode
     value: true
-  10:
+  6:
     permission: minecraft.command.effect
     value: true
-  11:
+  7:
     permission: minecraft.command.selector
-    value: false
-  12:
-    permission: babysitter.bypass.spec
-    value: false
-  13:
-    permission: babysitter.bypass.give
-    value: false
-  14:
-    permission: babysitter.bypass.tp
-    value: false
-  15:
-    permission: babysitter.bypass.creative
-    value: false
-  16:
-    permission: babysitter.bypass.perms
     value: false

@@ -4,33 +4,36 @@ main: th3doc.babysitter.Main
 api-version: 1.13
 authors: [Th3_DoC]
 description: Admin Plugin
+load: POSTWORLD
+depend: [Vault, ProtocolLib]
 
 commands:
+  debug:
+    description: Activate Debug.
+    permission: babysitter.command.debug
+  test:
+    description: Debug Test Command.
+    permission: babysitter.command.debug
   babysit:
     description: Activate Admin State.
-    aliases: [bs]
+    aliases: [ bs ]
     permission: babysitter.command.bs
-  vanish:
-    description: Toggle Vanish State.
-    permission: babysitter.command.vanish
-  god:
-    description: Toggle God Mode.
-    permission: babysitter.command.god
-  fly:
-    description: Toggle Fly Mode.
-    permission: babysitter.command.fly
   see:
     description: View/Edit Player Inventories.
     permission: babysitter.command.see
-  back:
-    description: Travel Back To Your Survival Location.
-    permission: babysitter.bypass.tp
-  give:
+  giveplayer:
     description: Give Players Minecraft Items.
+    aliases: [ gp ]
     permission: babysitter.command.give
-  spawn:
-    description: Spawn Minecraft Entities.
-    permission: babysitter.command.spawn
+  entity:
+    description: Modify Spawned Minecraft Entities.
+    permission: babysitter.command.entity
+  rewards:
+    description: Modify BS Rewards System.
+    permission: babysitter.command.rewards
+  restore:
+    description: Modify BS Rewards System.
+    permission: babysitter.command.restore
 
 permissions:
   babysit.*:
@@ -44,26 +47,26 @@ permissions:
           babysitter.command.bs:
             description: Allows The Use Of BabySit Command.
             default: op
-          babysitter.command.vanish:
-            description: Allows The Use Of Vanish Command.
-            default: op
-          babysitter.command.fly:
-            description: Allows The Use Of Hide Command.
-            default: op
-          babysitter.command.god:
-            description: Allows The Use Of God Command.
-            default: op
           babysitter.command.see:
             description: Allows The Use Of InvSee Command.
             default: op
           babysitter.command.edit:
             description: Allows The Editing of Players.
             default: op
-          babysitter.command.spawn:
-            description: Allows Spawning Functionality.
+          babysitter.command.entity:
+            description: Allows Spawning\Modifing Entities.
+            default: op
+          babysitter.command.rewards:
+            description: Allows Modifing Rewards.
             default: op
           babysitter.command.give:
             description: Allows Give Function Without Selector Capabilities.
+            default: op
+          babysitter.command.restore:
+            description: Restore Old Data From Outdated Config Files.
+            default: op
+          babysitter.command.debug:
+            description: Allows The Use Of Debug.
             default: false
       babysitter.bypass.*:
         description: Bypass Admin Restrictions.

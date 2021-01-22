@@ -1,19 +1,20 @@
 package th3doc.babysitter.events;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.InventoryHolder;
 import th3doc.babysitter.Main;
-import th3doc.babysitter.player.data.States;
+import th3doc.babysitter.entities.player.BasicPlayer;
+import th3doc.babysitter.utils.menu.Menu;
 
-public class InventoryClick implements Listener {
+public class InventoryClick implements Listener
+{
     
     //VARIABLES
     final private Main main;
-    
+    private BasicPlayer player;
     
     //CONSTRUCTOR
     public InventoryClick(Main main) { this.main = main; }
@@ -21,16 +22,16 @@ public class InventoryClick implements Listener {
     @EventHandler
     public void invClickEvent(InventoryClickEvent e)
     {
-        final int[] lockedObj = new int[]{1,2,3,5,6,7,10,11,12,13,14,15,16};
-        Player p = (Player) e.getWhoClicked();
-        if(main.getPlayer(p.getUniqueId()).isAdmin() &&
-           main.getPlayer(p.getUniqueId()).admin().getConfig().getState(States.ADMIN) &&
-           main.getPlayer(p.getUniqueId()).admin().gui().isGuiOpen() &&
-           (e.getCurrentItem() != null && e.getCurrentItem().equals(new ItemStack(Material.GREEN_STAINED_GLASS_PANE))))
-        {
-            for(int i : lockedObj)
-            {
-                if(i == e.getSlot()) { e.setCancelled(true); }
+        if(e.getWhoClicked() instanceof Player && main.players().isCustomPlayerOnline(e.getWhoClicked().getName())) {
+            player = main.players().getCustomPlayer(e.getWhoClicked().getUniqueId());
+            if(player.isMenuOpen() && e.getClickedInventory() != null) {
+                InventoryHolder invHolder = e.getClickedInventory().getHolder();
+                if(invHolder instanceof Menu) {
+                    if(e.getCurrentItem() == null) { return; }
+            
+                    Menu menu = (Menu) invHolder;
+                    menu.menuClickHandler(e);
+                }
             }
         }
     }

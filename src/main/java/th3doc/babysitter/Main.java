@@ -1,128 +1,108 @@
 package th3doc.babysitter;
 
-import net.milkbowl.vault.permission.Permission;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import th3doc.babysitter.commands.*;
-import th3doc.babysitter.events.*;
-import th3doc.babysitter.player.PlayerHandler;
-import th3doc.babysitter.player.data.Chat;
+import th3doc.babysitter.entities.npc.Entities;
+import th3doc.babysitter.entities.player.Players;
+import th3doc.babysitter.utils.Utils;
+import th3doc.babysitter.utils.debug.Debug;
 
-import java.util.*;
+import java.util.Collection;
+
+//TODO Add Jail System // jail on loggin /w message
+//TODO PVP Toggle
+//TODO Claim System
+//TODO command for reloading configs
+//TODO Custom Coords-Hud command {p.getfaciing for direction} turn off on death if activa and back on if it was active after respawn
+//TODO PROTOCOL LIB SETUP VANISH TAB?ENITITY WATCH? or create a while loop? checking location vs location? or p.canSee???
+//TODO Add auto rank up system, time based, require itemstack size/material in hand to upgrade?
 
 public final class Main extends JavaPlugin {
+    private boolean isReloading = true;
+    private Debug debug;
+    private Utils utils;
+    private Entities entities;
+    private Players players;
     
-    //VARIABLES
-    private static HashMap<UUID, PlayerHandler> player;
-    private DefaultConfig config;
-    private Permission perms;
-    private boolean isDumping;
-
     @Override
-    public void onEnable()
-    {
-        if(!setupPermissions())
-        {
-            Bukkit.getLogger().info("Error Loading Permission Handler, stopping plugin.");
-            Bukkit.getPluginManager().getPlugin(this.getName());
+    public void onEnable() {
+        this.debug = new Debug(this);
+        //DEBUG
+        if(debug.utils()) { debug.message("Loading Main"); }
+        this.utils = new Utils(this);
+        this.entities = new Entities(this);
+        this.players = new Players(this);
+        this.utils.save().run();
+        if(!getOnlineBukkitPlayers().isEmpty()) {
+            if(debug.players()) { debug.message("reloading players"); } players.reloadCustomPlayers();
         }
-        this.config = new DefaultConfig(this);
-        this.isDumping = false;
-        registerCommands();
-        registerEvents();
-        player = new HashMap<>();
-        this.groups = new ArrayList<>();
-        setGroups();
-        reloadCommand();
-        this.getLogger().info(Chat._onEnable.txt);
-
+        isReloading = false;
+        this.getLogger().info(Utils.Chat._onEnable.txt);
     }
     
-    
-    //DEFAULT CONFIG
-    public DefaultConfig defaultConfig() { return this.config; }
-
-    
-    //ADD PLAYER
-    public void newPlayer(Player p)
-    {
-        Main main = this;
-        new BukkitRunnable()
-        {   @Override
-            public void run()
-            { player.put(p.getUniqueId(), new PlayerHandler(main, p)); }
-        } .runTaskAsynchronously(this);
-    }
-    public PlayerHandler getPlayer(UUID uuid) { return player.get(uuid); }
-    public void removePlayer(UUID uuid) { player.remove(uuid); }
-
-    
-    //REGISTER PERMISSIONS
-    public Permission getPerms() { return perms; }
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
+    @Override
+    public void onDisable() {
+        /*DEBUG*/if(debug.utils()) { debug.message("on-disable called"); }
+        while(isReloading) {
+            players.unLoad();
+            /*DEBUG*/if(debug.utils()) { debug.message("players unloaded"); }
+            utils.save().cancel();
+            /*DEBUG*/if(debug.utils()) { debug.message("files saved"); }
+            isReloading = false;
+        }
+        /*DEBUG*/if(debug.utils()) { debug.message("disable finished"); }
     }
     
-    
-    //PERM GROUPS
-    private List<String> groups;
-    private void setGroups()
-    {
-        new BukkitRunnable() {
-            @Override
-            public void run()
-            {
-                groups.clear();
-                groups.addAll(Arrays.asList(perms.getGroups()));
-            }
-        } .runTaskTimerAsynchronously(this, 0L, 1200L);
+    public boolean isReloading() {
+        return isReloading;
     }
-    public List<String> getGroups() { return groups; }
-
     
-    //REGISTER COMMANDS
-    private void registerCommands()
-    {
-        this.getCommand("babysit").setExecutor(new BabysitCommand(this));
-        this.getCommand("vanish").setExecutor(new VanishCommand(this));
-        this.getCommand("god").setExecutor(new GodCommand());
-        this.getCommand("fly").setExecutor(new FlyCommand(this));
-        this.getCommand("see").setExecutor(new SeeInventoryCommand(this));
-        this.getCommand("give").setExecutor(new GiveCommand(this));
-        this.getCommand("back").setExecutor(new BackCommand(this));
-        this.getCommand("spawn").setExecutor(new SpawnVillager(this));
+    public void setReloading(boolean b) {
+        isReloading = b;
     }
-
+  
     
-    //REGISTER EVENTS
-    private void registerEvents()
-    {
-        PluginManager manger = this.getServer().getPluginManager();
-
-        manger.registerEvents(new InventoryClose(this), this);
-        manger.registerEvents(new PlayerCommandPreProcess(this), this);
-        manger.registerEvents(new PlayerJoin(this), this);
-        manger.registerEvents(new PlayerQuit(this), this);
-        manger.registerEvents(new BlockPlace(this), this);
-        manger.registerEvents(new PlayerDropItem(this), this);
-        manger.registerEvents(new InventoryOpen(this), this);
-        manger.registerEvents(new InventoryClick(this), this);
-        manger.registerEvents(new EntityBlockChange(this), this);
+    public Entities entities() {
+        return entities;
     }
-
     
-    //RELOAD COMMAND
-    private void reloadCommand()
-    {
-        //CLEAR PLAYERS
-        player.clear();
-        //INITIALIZE PLAYERS
-        for (Player p : this.getServer().getOnlinePlayers()) { newPlayer(p); }
+    public Debug debug() {
+        return debug;
+    }
+    
+    /**
+     Plugin Utils
+     
+     @return plugin
+     */
+    public Utils utils() {
+        return utils;
+    }
+    
+    /**
+     Player Utils
+     
+     @return players
+     */
+    public Players players() {
+        return players;
+    }
+    
+    /**
+     Get All Online Bukkit Players
+     
+     @return list of online bukkit players
+     */
+    public Collection<? extends Player> getOnlineBukkitPlayers() {
+        return this.getServer().getOnlinePlayers();
+    }
+    
+    /**
+     Broadcast To All Players Online
+     
+     @param message to be sent
+     */
+    public void massMessage(String message) {
+        for(Player p : getOnlineBukkitPlayers()) { p.sendMessage(message); }
     }
 }

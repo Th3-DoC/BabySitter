@@ -6,7 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import th3doc.babysitter.Main;
 
-public class EntityBlockChange implements Listener {
+public class EntityBlockChange implements Listener
+{
     
     //VARIABLES
     final private Main main;
@@ -21,7 +22,7 @@ public class EntityBlockChange implements Listener {
     {
         //ENDERMAN GRIEFING
         if(e.getEntity() instanceof Enderman &&
-           !main.defaultConfig().isEndermanGriefingAllowed())
+           !main.utils().getConfig().isEndermanGriefingAllowed())
         {
             e.setCancelled(true);
         }
